@@ -1,0 +1,471 @@
+syntax = "proto3";
+
+
+package geneo.cms.content.parser.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "content_management/content.db.proto";
+import "learning_management/lms.db.proto";
+import "common/common.db.proto";
+import "user_management/ums.db.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "Learn apis";
+  }
+  schemes: HTTP;
+};
+
+service ContentParserAPIServiceV1 {
+  rpc upsertResource (ResourceRequest) returns (ResourceResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertResource"
+      body:"*"
+      response_body: "resourceIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Insert all Resources."
+      description: "Insert all Resources."
+      tags: ""
+    };
+  }
+
+  rpc upsertContents (ContentRequest) returns (ContentResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertContents"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Preview of the Homework"
+      description: "To Get all the content related to particular homework "
+      tags: ""
+    };
+  }
+
+  rpc upsertResourceContents (ResourceContentRequest) returns (ResourceContentResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertResourceContents"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Preview of the Homework"
+      description: "To Get all the content related to particular homework "
+      tags: ""
+    };
+  }
+
+  rpc upsertQuestions (QuestionRequest) returns (QuestionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertQuestions"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Preview of the Homework"
+      description: "To Get all the content related to particular homework "
+      tags: ""
+    };
+  }
+
+  rpc upsertLearningOutcome (LearningOutcomeRequest) returns (LearningOutcomeResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertLearningOutcome"
+      body:"*"
+      response_body: "learningOutcomeIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Insert all Resources."
+      description: "Insert all Resources."
+      tags: ""
+    };
+  }
+
+  rpc upsertHomework (HomeworkRequest) returns (HomeworkResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertHomework"
+      body:"*"
+      response_body: "homeworkIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Insert all Resources."
+      description: "Insert all Resources."
+      tags: ""
+    };
+  }
+
+  rpc upsertQuestionBank (QuestionBankRequest) returns (QuestionBankResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertQuestionBank"
+      body:"*"
+      response_body: "questionBankIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Insert all Resources."
+      description: "Insert all Resources."
+      tags: ""
+    };
+  }
+
+  rpc upsertInstruction (InstructionRequest) returns (InstructionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertInstruction"
+      body:"*"
+      response_body: "instructionIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Insert all Resources."
+      description: "Insert all Resources."
+      tags: ""
+    };
+  }
+  rpc upsertBook (BookRequest) returns (BookResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertBook"
+      body:"*"
+      response_body: "bookIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Insert all Resources."
+      description: "Insert all Resources."
+      tags: ""
+    };
+  }
+
+  rpc upsertBookModule (BookRequest) returns (BookResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertBook"
+      body:"*"
+      response_body: "bookIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Insert all Resources."
+      description: "Insert all Resources."
+      tags: ""
+    };
+  }
+
+  rpc upsertModule (ModuleRequest) returns (ModuleResponse) {
+    option (google.api.http) = {
+      post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/upsertModule"
+      body:"*"
+      response_body: "moduleIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Insert all Resources."
+      description: "Insert all Resources."
+      tags: ""
+    };
+  }
+
+
+
+rpc fetchBookAndModule (BMRequest) returns (BMResponse) {
+  option (google.api.http) = {
+    post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/fetchBookAndModule"
+    body:"*"
+    response_body: "module"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    summary: "Fetch book."
+    description: "Fetch book."
+    tags: ""
+  };
+}
+
+rpc saveModuleResourceTag (ModuleResourceTagRequest) returns (ModuleResourceTagResponse) {
+  option (google.api.http) = {
+    post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/saveModuleResourceTag"
+    body:"*"
+    response_body: "modResTagIds"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    summary: "Fetch book."
+    description: "Fetch book."
+    tags: ""
+  };
+}
+
+rpc saveModuleBookContent (ModuleBookContentRequest) returns (ModuleBookContentResponse) {
+  option (google.api.http) = {
+    post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/saveModuleBookContent"
+    body:"*"
+    response_body: "bookModuleIds"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    summary: "Fetch book."
+    description: "Fetch book."
+    tags: ""
+  };
+}
+
+rpc saveLesson (LessonRequest) returns (LessonResponse) {
+  option (google.api.http) = {
+    post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/saveLesson"
+    body:"*"
+    response_body: "lessonIds"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    summary: "Fetch book."
+    description: "Fetch book."
+    tags: ""
+  };
+}
+
+
+rpc saveModuleLessonTag (ModuleLessonTagRequest) returns (ModuleLessonTagResponse) {
+  option (google.api.http) = {
+    post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/saveModuleLessonTag"
+    body:"*"
+    response_body: "modLessTagIds"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    summary: "Fetch book."
+    description: "Fetch book."
+    tags: ""
+  };
+}
+rpc runTranscoder (TranscoderRequest) returns (TranscoderResponse) {
+  option (google.api.http) = {
+    post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/runTranscoder"
+    body:"*"
+    response_body: ""
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    summary: "Run transcoder."
+    description: "Run transcoder."
+    tags: ""
+  };
+}
+
+rpc taskEstimatedTimeFix (estimatedTimeRequest) returns (estimatedTimeResponse) {
+  option (google.api.http) = {
+    post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/taskEstimatedTimeFix"
+    body:"*"
+    response_body: ""
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    summary: "Run transcoder."
+    description: "Run transcoder."
+    tags: ""
+  };
+}
+rpc askFix (estimatedTimeRequest) returns (estimatedTimeResponse) {
+  option (google.api.http) = {
+    post: "/geneo.cms.content.parser.apis.ContentParserAPIServiceV1/askFix"
+    body:"*"
+    response_body: ""
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    summary: "Run transcoder."
+    description: "Run transcoder."
+    tags: ""
+  };
+}
+
+}
+
+message estimatedTimeRequest {}
+message estimatedTimeResponse {}
+
+message TranscoderRequest {}
+message TranscoderResponse {}
+
+message ModuleResourceTagRequest {
+  repeated geneo.content.db.ModuleResourceTag moduleResourceTag = 1 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.content.db.ModuleQuestionBankTag moduleQuestionBankTag = 2 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.content.db.ModuleResourceTag moduleHomeworkTag = 3 [(google.api.field_behavior) = REQUIRED];
+}
+message ModuleResourceTagResponse {
+  repeated int32 modResTagIds = 1 [(google.api.field_behavior) = REQUIRED];
+  repeated int32 modQBTagIds = 2 [(google.api.field_behavior) = REQUIRED];
+  repeated int32 modHWTagIds = 3 [(google.api.field_behavior) = REQUIRED];
+
+}
+message Lesson {
+  optional int32 id = 1; // Primary key for lesson plan
+  optional string lessonId = 2; // Referencing key for lesson plan
+  string title = 3; // Title of the lesson plan
+  optional int32 courseId = 4; // Foreign key referencing content_management.course.course_id
+  optional int32 moduleId = 5; // Foreign key referencing content_management.module.module_id
+  int32 estimatedTimeInMin = 6; // Estimated time for the lesson plan
+  repeated string resourceIds = 7; // Array of resource IDs
+  geneo.content.db.CreationStatusEnum creationStatus = 8; // Creation status of the lesson plan
+  optional string sourceLessonId = 9; // ID of the source lesson plan
+  repeated string learningOutcomesIds = 10; // Array of learning outcome IDs
+  google.protobuf.Timestamp createdOn = 11; // Creation timestamp
+  int64 createdBy = 12; // User who created the entry
+  google.protobuf.Timestamp modifiedOn = 13; // Last modification timestamp
+  int64 modifiedBy = 14; // User who last modified the entry
+  optional string posterImageUrl = 15;
+  optional string posterImageName = 16;
+
+}
+
+message LessonRequest {
+  repeated Lesson lesson = 1 [(google.api.field_behavior) = REQUIRED];
+
+}
+message LessonResponse {
+  repeated string lessonIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+message ModuleLessonTagRequest {
+  repeated geneo.content.db.ModuleLessonTag moduleLessonTag = 1 [(google.api.field_behavior) = REQUIRED];
+
+}
+message ModuleLessonTagResponse {
+  repeated int32 modLessTagIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ModuleBookContentRequest {
+  repeated geneo.content.db.ModuleBookContent moduleBookContent = 1 [(google.api.field_behavior) = REQUIRED];
+
+}
+message ModuleBookContentResponse {
+  repeated int32 bookModuleIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message BMRequest {
+  int32 bookId = 2 [(google.api.field_behavior) = REQUIRED];
+
+}
+
+message BMResponse {
+  repeated geneo.common.db.Book book = 1 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.content.db.Module module = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+message ContentRequest {
+  repeated geneo.content.db.Content content = 2 [(google.api.field_behavior) = REQUIRED];
+
+}
+
+message QuestionRequest {
+  repeated geneo.content.db.Question question = 1 [(google.api.field_behavior) = REQUIRED];
+
+
+}
+
+
+message ResourceContentRequest {
+  repeated geneo.content.db.ResourceContent resource_content = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+
+message ContentResponse {
+  repeated string contentIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message QuestionResponse {
+  repeated string questionIds = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ResourceContentResponse {
+  repeated string resourceContentIds = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ResourceRequest {
+  repeated geneo.content.db.Resource resource = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ResourceResponse {
+  repeated string resourceIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message LearningOutcomeRequest {
+  repeated geneo.content.db.LearningOutcome learningOutcome = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message LearningOutcomeResponse {
+  repeated string learningOutcomeIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message HomeworkRequest {
+  repeated geneo.lms.db.Task homework = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message HomeworkResponse {
+  repeated string homeworkIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message Book {
+  string title = 2;
+  string author = 3; // Author of the book
+  string publisher = 4; // Publisher of the book
+  string isbnNo = 5; // ISBN number of the book
+  string publishingYear = 6; // Year of publication
+  int32 noOfPages = 7; // Number of pages in the book
+  string pdfUrl = 8; // URL of the book's PDF
+  string coverImageUrl = 9; // URL of the book's cover image
+  int32 version = 10; // Version of the book
+  optional geneo.common.db.Subject.SubjectEnum subject = 11; // Foreign key referencing subject.subject_id
+  optional geneo.common.db.Class.ClassEnum grade = 12; // Foreign key referencing class.class_id
+  optional geneo.common.db.Board.BoardEnum board = 13; // Foreign key referencing board.board_id
+  optional string medium = 14; // Foreign key referencing teach_medium.teach_medium_id
+  google.protobuf.Timestamp createdOn = 15;
+}
+message BookRequest {
+  repeated Book books = 1 ;
+  repeated geneo.content.db.Module modules = 2 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.content.db.ModuleBookContent moduleBookContents = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message BookResponse {
+  repeated int32 bookIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message module {
+  optional int32 module_id = 1;
+  string name = 2; // Name of the module
+  string posterImageUrl = 3;
+  string shortDescription = 4; // Short description of the module
+  string longDescription = 5; // Long description of the module
+  optional int32 parentModuleId = 6; // Foreign key referencing content_management.module.module_id
+  optional int32 bookId = 7; // Foreign key referencing common.book.book_id
+  geneo.content.db.Module.ModuleCategoryEnum category = 8; // Category of the module
+  int32 level = 9; // Level of the module
+  int32 rank = 10;
+  google.protobuf.Timestamp createdOn = 11; // Creation timestamp
+  optional int64 createdBy = 12; // User who created the entry
+  optional google.protobuf.Timestamp modifiedOn = 13; // Last modification timestamp
+  optional int64 modifiedBy = 14; // User who last modified the entry
+  optional string coverImageName = 15; // User who last modified the entry
+
+}
+message ModuleRequest {
+  repeated module modules = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ModuleResponse {
+  repeated int32 moduleIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+message QuestionBankRequest {
+  repeated geneo.content.db.QuestionBank questionBank = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message QuestionBankResponse {
+  repeated string questionBankIds = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message InstructionRequest {
+  repeated geneo.content.db.ResourceTeacherInstruction instruction = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message InstructionResponse {
+  repeated string instructionIds = 1 [(google.api.field_behavior) = REQUIRED];
+}

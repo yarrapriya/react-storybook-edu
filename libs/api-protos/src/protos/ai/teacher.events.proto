@@ -1,0 +1,295 @@
+syntax = "proto3";
+
+package geneo.ai.teacher.events;
+
+import "google/protobuf/timestamp.proto";
+import "common/common.db.proto";
+
+enum ResourceSelectionFromTypeEnum {
+    APP_HOMEPAGE = 0;
+    CHAPTER_HOMEPAGE = 1;
+    TOPIC_HOMEPAGE = 2;
+    LESSON_PLAN_HOMEPAGE = 3;
+    HOMEWORK_HOMEPAGE = 7;
+}
+
+enum HomeWorkSelectionFromTypeEnum {
+    APP_HOMEPAGE = 0;
+    HOMEWORK_HOMEPAGE = 2;
+}
+
+enum LessonPlanSelectionFromTypeEnum {
+    APP_HOMEPAGE = 0;
+    CHAPTER_HOMEPAGE = 1;
+    TOPIC_HOMEPAGE = 2;
+    LESSON_PLAN_HOMEPAGE = 3;
+}
+
+message InteractionButton {
+    required string url = 1;
+    required string context = 2;
+    required string name = 3;
+}
+
+message BookAction {
+  message BookSummary {
+      required int32 timespent = 1;
+  }
+  oneof BookActionType {
+      bool open = 1;
+      BookSummary close = 2;
+  }
+  required int32 book_id = 3;
+  required string action_id = 4; // book session id
+}
+
+
+message ChapterAction {
+  message ChapterSummary {
+      required int32 timespent = 1;
+  }
+  oneof ChapterActionType {
+      bool open = 1;
+      ChapterSummary close = 2;
+  }
+  required int32 chapter_id = 3;
+  required string action_id = 4;
+}
+
+
+message TopicAction {
+  message TopicSummary {
+      required int32 timespent = 1;
+  }
+  oneof TopicActionType {
+      bool open = 1;
+      TopicSummary close = 2;
+  }
+  required int32 topic_id = 3;
+  required string action_id = 4;
+}
+
+
+message LessonPlanAction {
+    message LessonPlanSummary {
+        required int32 timespent = 1;
+    }
+    oneof LessonPlanActionType {
+        bool open = 1;
+        LessonPlanSummary close = 2;
+        bool create = 3;
+    }
+    required string lession_id = 4;
+    required string action_id = 5;
+    required LessonPlanSelectionFromTypeEnum selected_from = 6;
+}
+
+message ResourceAction {
+    enum ResourceCategoryEnum {
+        RESOURCE_CATEGORY_UNDEFINED = 0; // Represents undefined category.
+        RESOURCE_CATEGORY_HOOK = 1; // Represents hook resource category.
+        RESOURCE_CATEGORY_EXPLANATION = 2; // Represents explanation resource category.
+        RESOURCE_CATEGORY_SOLVED_EXAMPLES = 3; // Represents solved examples resource category.
+        RESOURCE_CATEGORY_EXAMPLES = 4; // Represents examples resource category.
+        RESOURCE_CATEGORY_PRACTICE = 5; // Represents practice resource category.
+        RESOURCE_CATEGORY_REVISION = 6; // Represents revision resource category.
+        RESOURCE_CATEGORY_ACTIVITY = 7; // Represents activity resource category.
+        RESOURCE_CATEGORY_REAL_LIFE_CONNECT = 8; // Represents real-life connect resource category.
+        RESOURCE_CATEGORY_COMPETENCY_BASED_QUESTIONS = 9; // Represents competency-based questions resource category.
+        RESOURCE_CATEGORY_INTRODUCTION = 10; // Represents introduction resource category.
+        RESOURCE_CATEGORY_COMPETITIVE_EXAM = 11; // Represents competitive exam resource category.
+        RESOURCE_CATEGORY_READING = 12; // Represents reading resource category.
+        RESOURCE_CATEGORY_RECITATION = 13; // Represents recitation resource category.
+        RESOURCE_CATEGORY_END_OF_CHAPTER = 14; // Represents end of chapter resource category.
+        RESOURCE_CATEGORY_GRAMMAR = 15; // Represents grammar resource category.
+        RESOURCE_CATEGORY_END_OF_POEM = 16; // Represents end of poem resource category.
+        RESOURCE_CATEGORY_TEST_PAPER = 17; // Represents test paper resource category.
+      }
+
+      // Enum for ResourceEnum
+      enum ResourceEnum {
+        RESOURCE_TYPE_UNDEFINED = 0; // Represents undefined resource type.
+        RESOURCE_TYPE_VIDEO = 1; // Represents video resource type.
+        RESOURCE_TYPE_AUDIO = 2; // Represents audio resource type.
+        RESOURCE_TYPE_READING = 3; // Represents reading resource type.
+        RESOURCE_TYPE_QUESTION_SET = 4; // Represents question set resource type.
+        RESOURCE_TYPE_QUESTION = 5; // Represents question resource type.
+        RESOURCE_TYPE_PRACTICE = 6; // Represents practice resource type.
+        RESOURCE_TYPE_TEST = 7; // Represents test resource type.
+        RESOURCE_TYPE_ACTIVITY = 8; // Represents activity resource type.
+        RESOURCE_TYPE_SIMULATION = 9; // Represents simulation resource type.
+        RESOURCE_TYPE_EXPLORIMENT = 10; // Represents exploriment resource type.
+        RESOURCE_TYPE_GAME = 11; // Represents game resource type.
+        RESOURCE_TYPE_AR_VR = 12; // Represents AR/VR resource type.
+        RESOURCE_TYPE_PPT = 13; // Represents PPT resource type.
+        RESOURCE_TYPE_E_BOOK = 14; // Represents e-book resource type.
+        RESOURCE_TYPE_PDF = 15; // Represents PDF resource type.
+        RESOURCE_TYPE_FLASHCARDS = 16; // Represents flashcards resource type.
+        RESOURCE_TYPE_MINDMAP = 17; // Represents mindmap resource type.
+      }
+    message ResourceSummary {
+        required int32 timespent = 1;
+    }
+    oneof ResourceActionType {
+        bool open = 1;
+        ResourceSummary close = 2;
+    }
+    required string resource_id = 4;
+    required string action_id = 5; // resource session id
+    ResourceEnum resource_type = 6; // Type of the resource
+    ResourceCategoryEnum resource_category = 8; // Category type of the resource
+    required ResourceSelectionFromTypeEnum selected_from = 6;
+}
+
+message ResourcePageContentAction {
+    message ResourcePageContentSummary {
+        required int32 timespent = 1;
+    }
+    oneof ResourcePageContentActionType {
+        bool open = 1;
+        ResourcePageContentSummary close = 2;
+    }
+    required int64 resource_page_id = 4;
+    required string action_id = 5;
+    ContentEnum content_type = 6; // Type of content
+}
+
+message ResourceContentAction {
+    enum ContentEnum {
+        CONTENT_TYPE_UNDEFINED = 0; // Represents undefined content type.
+        CONTENT_TYPE_PASSAGE = 1; // Represents passage content type.
+        CONTENT_TYPE_EXPERIMENT = 2; // Represents experiment content type.
+        CONTENT_TYPE_CONTENT_VIDEO = 3; // Represents content video content type.
+        CONTENT_TYPE_FLASHCARD = 4; // Represents flashcard content type.
+        CONTENT_TYPE_MINDMAP = 5; // Represents mindmap content type.
+    }
+    message ResourceContentSummary {
+        required int32 timespent = 1;
+    }
+    oneof ResourceContentType {
+        bool open = 1;
+        ResourceContentSummary close = 2;
+    }
+    required int64 resource_content_id = 4;
+    required string action_id = 5;
+    ContentEnum content_type = 6; // Type of content
+}
+// need to add info about revision
+
+message HomeworkAction {
+    message QuestionOpen {
+        required string question_id = 3; // task id
+    }
+    message QuestionSubmitSummary {
+        required int32 timespent = 1;
+        repeated string answer = 2;
+        required string question_id = 3; // task id
+    }
+    message QuestionReviewSummary {
+        required int32 timespent = 1;
+        required string question_id = 3;
+    }
+    message HomeworkSummary {
+      required int32 timespent = 1;
+    }
+    oneof HomeworkActionType {
+        bool open = 1;
+        HomeworkSummary close = 2;
+        QuestionOpen question_open = 7;
+        QuestionSubmitSummary question_submit = 3;
+        bool review_open = 4;
+        HomeworkSummary review_close = 5;
+        QuestionReviewSummary question_review_summary = 6;
+        bool create = 7;
+    }
+  required string homework_id = 4;
+  required string action_id = 5;
+  required HomeWorkSelectionFromTypeEnum selected_from = 6;
+  bool reattempt = 7;
+}
+
+message LearningOutcomeAction {
+  message LearningOutcomeSummary {
+      required int32 timespent = 1;
+  }
+  oneof LearningOutcomeActionType {
+      bool open = 1;
+      LearningOutcomeSummary close = 2;
+  }
+  required int32 learning_outcome_id = 3;
+  required string action_id = 4;
+}
+
+
+message RecommendationAction {
+    message RecommendationSummary {
+        required int32 timespent = 1;
+    }
+    oneof RecommendationActionType {
+        bool open = 1;
+        BookSummary close = 2;
+    }
+    required int32 recommendation_id = 3;
+    required string action_id = 4;
+}
+
+
+message PerformanceAction {
+    message PerformanceASummary {
+        required int32 timespent = 1;
+    }
+    oneof PerformanceActionType {
+        bool open = 1;
+        PerformanceASummary close = 2;
+    }
+    required string preformance_id = 4;
+    required string action_id = 5;
+}
+
+
+message Logout {
+    message LogoutType {
+        enum LogoutTypeEnum {
+            MANUAL = 0;
+            DUE_TO_INACTIVITY = 1;
+            KILLED_SESSION = 2;
+            AUTO_LOGOUT = 3;
+        }
+    }
+
+    required int32 timespent = 1;
+    required LogoutType.LogoutTypeEnum reason = 2;
+}
+
+
+message Event {
+    oneof EventType {
+        bool login = 1;
+        Logout logout = 2;
+        TopicAction topic_action = 4;
+        LessonPlanAction lesson_plan_action = 5;
+        HomeworkAction homework_action = 6;
+        ResourceAction resource_action = 7;
+        ResourceContentAction content_action = 8;
+        ChapterAction chapter_action = 10;
+        PerformanceAction preformance_action = 11;
+        BookAction book_action = 11;
+        InteractionButton interaction_button = 35;
+    }
+    int64 teacher_id = 102;
+    string session_id = 103;
+    google.protobuf.Timestamp timestamp = 104;
+
+    string book_session_id = 107;
+    string chapter_session_id = 108;
+
+    int32 event_index = 113;// event number starts from 0 for each session
+    string action_id = 114; // will be stored from action id
+    string type = 115;
+    string action_type = 116;
+    google.protobuf.Timestamp created_on = 117; // Creation timestamp
+    optional int64 created_by = 118; // User who created the entry
+    optional google.protobuf.Timestamp modified_on = 119; // Last modification timestamp
+    optional int64 modified_by = 120; // User who last modified the entry
+
+}

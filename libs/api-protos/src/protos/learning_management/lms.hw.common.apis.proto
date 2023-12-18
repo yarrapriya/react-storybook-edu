@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+
+package geneo.lms.hw.common.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "content_management/content.db.proto";
+import "common/common.db.proto";
+import "learning_management/lms.db.proto";
+import "user_management/ums.db.proto";
+import "google/api/field_behavior.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "Learn apis";
+  }
+  schemes: HTTP;
+};
+
+service LmsHomeworkCommonAPIServiceV1 {
+
+  rpc fetchHomeworksByModule (FetchHomeworksByModuleRequest) returns (FetchHomeworksByModuleResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.hw.common.apis.LmsHomeworkCommonAPIServiceV1/fetchHomeworksByModule"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all Homeworks."
+      description: "Lists all homeworks by module."
+      tags: "existing_homeworks"
+    };
+  }
+
+  rpc fetchHomeworkContent (HomeworkContentFetchRequest) returns (HomeworkContentFetchResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.hw.common.apis.LmsHomeworkCommonAPIServiceV1/fetchHomeworkContent"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Preview of the Homework"
+      description: "To Get all the content related to particular homework "
+      tags: "homework content"
+    };
+  }
+}
+
+
+message HomeworkContentFetchRequest {
+  int64 person_id = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.ProfileRolesEnum person_type = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 homework_id = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+message HomeworkContentFetchResponse {
+  geneo.common.db.APIResponse.StatusEnum status = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.common.db.APIResponse.CodeEnum code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  HomeworkContent data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message HomeworkContent {
+  HomeworkTask homework = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.lms.db.TaskInfo questions_sequence_info = 2[(google.api.field_behavior) = REQUIRED];
+  repeated geneo.content.db.Question homework_content = 3 [(google.api.field_behavior) = REQUIRED];
+
+}
+
+// Request model for /teacher/homework/existing/by-module
+message FetchHomeworksByModuleRequest {
+  int64 person_id = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.ProfileRolesEnum person_type = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 module_id = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Response model for /teacher/homework/existing/by-module
+message FetchHomeworksByModuleResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  HomeworksByModule data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message HomeworksByModule {
+  repeated HomeworkTask existing_homeworks = 1  [(google.api.field_behavior) = REQUIRED];
+  optional int32 module_id = 2;
+
+}
+
+// Message for homework task
+// Message for homework task
+message HomeworkTask {
+  int32 homework_id = 1 [(google.api.field_behavior) = REQUIRED]; // ID of the homework
+  string homework_title = 2 [(google.api.field_behavior) = REQUIRED]; // Title of the homework
+  int32 class_id = 3;
+  string class = 4 [(google.api.field_behavior) = REQUIRED]; // Class to which the homework is assigned
+  optional int32 sectionId = 5;
+  optional string section = 6 [(google.api.field_behavior) = REQUIRED]; // Section to which the homework is assigned
+  int32 subject_id = 7 [(google.api.field_behavior) = REQUIRED]; // ID of the course
+  string subject = 8 [(google.api.field_behavior) = REQUIRED]; // Subject of the homework
+  int32 module_id = 9 [(google.api.field_behavior) = REQUIRED]; // ID of the module
+  string module_name = 10;
+  optional int32 chapter_id = 31;
+  geneo.content.db.Module.ModuleCategoryEnum module_category = 11 [(google.api.field_behavior) = REQUIRED]; // ID of the module
+  optional int64 teacher_id = 12 [(google.api.field_behavior) = REQUIRED]; // ID of the teacher
+  optional string teacher_name = 13 [(google.api.field_behavior) = REQUIRED]; // Name of the teacher
+  optional string teacher_profile_image_url = 14 [(google.api.field_behavior) = REQUIRED]; // URL of the teacher's profile image
+  string description = 15 [(google.api.field_behavior) = OPTIONAL]; // Description of the homework
+  string homework_poster_img_url = 16 [(google.api.field_behavior) = REQUIRED]; // URL of the homework poster image
+  geneo.content.db.DifficultyLevelEnum difficulty_level = 17 [(google.api.field_behavior) = REQUIRED]; // Difficulty level of the homework
+  float estimated_time_in_min = 18 [(google.api.field_behavior) = REQUIRED]; // Estimated time for which the homework is assigned
+  geneo.lms.db.TaskCreationStatusEnum task_creation_status = 19 [(google.api.field_behavior) = REQUIRED]; // Creation status of the task
+  geneo.lms.db.TaskActiveStatusEnum task_active_status = 20 [(google.api.field_behavior) = REQUIRED]; // Active status of the task
+  repeated string homework_instructions = 21 [(google.api.field_behavior) = REQUIRED]; // Instructions for the homework
+  HomeworkContentInfo homework_content_info = 22 [(google.api.field_behavior) = REQUIRED]; // Content info of the homework
+  optional google.protobuf.Timestamp homework_assigned_date = 23 [(google.api.field_behavior) = OPTIONAL]; // Date when the task was assigned
+  optional google.protobuf.Timestamp homework_commence_date = 24 [(google.api.field_behavior) = OPTIONAL]; // Date when the task commenced
+  optional google.protobuf.Timestamp homework_target_date = 25 [(google.api.field_behavior) = OPTIONAL]; // Target date for task completion
+  optional google.protobuf.Timestamp last_modified_time = 26 [(google.api.field_behavior) = OPTIONAL]; // Last Modified date for task
+  optional google.protobuf.Timestamp daily_reminder_time = 27 [(google.api.field_behavior) = OPTIONAL]; // Date when the task was assigned
+  optional int32 assigned_students_count = 28 [(google.api.field_behavior) = REQUIRED];
+  optional int32 students_submission_count = 29 [(google.api.field_behavior) = REQUIRED];
+  optional float class_score = 30 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+
+message HomeworkContentInfo {
+  int32 time_duration_in_min = 1 [(google.api.field_behavior) = REQUIRED];
+  int32 number_of_questions = 2 [(google.api.field_behavior) = REQUIRED];
+}

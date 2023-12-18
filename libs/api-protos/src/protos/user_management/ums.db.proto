@@ -1,0 +1,303 @@
+syntax = "proto3";
+
+package geneo.ums.db;
+
+option go_package = ".";
+
+import "google/protobuf/timestamp.proto";
+
+message ProfilePics {
+  string name = 1;
+  string url = 2;
+  int32 size = 3;
+  string mime_type = 4;
+}
+message DeviceDetails {
+
+}
+message Location {
+
+}
+
+// Enum for OTPEnum
+enum OTPEnum {
+  OTP_TYPE_UNDEFINED = 0; // Represents an undefined OTP type
+  STUDENT_REGISTRATION = 1;
+  STUDENT_LOGIN = 2;
+  TEACHER_REGISTRATION = 3;
+  TEACHER_LOGIN = 4;
+  STUDENT_VERIFICATION = 5;
+  TEACHER_VERIFICATION = 6;
+  STUDENT_RESET_PASSWORD = 7;
+  TEACHER_RESET_PASSWORD = 8;
+}
+
+// Enum for DeviceEnum
+enum DeviceEnum {
+  DEVICE_TYPE_UNDEFINED = 0; // Represents an undefined device type
+  DEVICE_TYPE_IOS = 1; // Represents an iOS device
+  DEVICE_TYPE_ANDROID = 2; // Represents an Android device
+  DEVICE_TYPE_WEB = 3; // Represents a web device
+}
+
+// Enum for ParentStudentRelationEnum
+enum ParentStudentRelationEnum {
+  PARENT_STUDENT_RELATION_UNDEFINED = 0; // Represents an undefined parent-student relation
+  PARENT_STUDENT_RELATION_FATHER = 1; // Represents a father as a parent
+  PARENT_STUDENT_RELATION_MOTHER = 2; // Represents a mother as a parent
+  PARENT_STUDENT_RELATION_GRAND_FATHER = 3; // Represents a grandfather as a parent
+  PARENT_STUDENT_RELATION_GRAND_MOTHER = 4; // Represents a grandmother as a parent
+  PARENT_STUDENT_RELATION_UNCLE = 5; // Represents an uncle as a parent
+}
+
+// Enum for TeacherRolesEnum
+enum TeacherRolesEnum {
+  TEACHER_ROLE_UNDEFINED = 0; // Represents an undefined teacher role
+  TEACHER_ROLE_TEACHER = 1; // Represents a regular teacher role
+  TEACHER_ROLE_SME = 2; // Represents a Subject Matter Expert (SME) teacher role
+}
+
+// Enum definition for profile_roles_enum
+enum ProfileRolesEnum {
+  PROFILE_ROLE_UNDEFINED = 0;
+  PROFILE_ROLE_STUDENT = 1;
+  PROFILE_ROLE_PARENT = 2;
+  PROFILE_ROLE_TEACHER = 3;
+}
+
+// Table definition for account
+// message Account {
+//   int64 account_id = 1; // Primary key for account table
+//   string account_ref = 2; // Reference to the account
+//   string account_name = 3; // Name of the account
+//   string email = 4; // Email address of the account
+//   string phone_country = 5; // Country of the phone number
+//   string phone_number = 6; // Phone number of the account
+//   string first_name = 7; // First name of the account holder
+//   string last_name = 8; // Last name of the account holder
+//   string middle_name = 9; // Middle name of the account holder
+//   int32 email_verify = 10; // Flag indicating if the email is verified
+//   int32 phone_verify = 11; // Flag indicating if the phone number is verified
+//   int32 is_active = 12; // Flag indicating if the account is active
+//   int32 is_delete = 13; // Flag indicating if the account is deleted
+//   ProfilePics profile_pics = 14; // JSON object containing profile pictures
+//   google.protobuf.Timestamp created_on = 15; // Creation timestamp
+//   optional google.protobuf.Timestamp modified_on = 16; // Last modification timestamp
+// }
+
+// Table definition for bounce_email
+message BounceEmail {
+  optional int64 bounce_email_id = 1; // Primary key for bounce_email table
+  string email = 2; // Email address
+  optional int64 profile_id = 3; // Foreign key referencing account.account_id
+  google.protobuf.Timestamp created_on = 4; // Creation timestamp
+}
+
+
+// Table definition for device
+message Device {
+  optional int64 device_id = 1; // Primary key for device table
+  optional int64 profile_id = 2; // Foreign key referencing account.account_id
+  DeviceEnum device_type = 3; // Type of the device
+  optional DeviceDetails device_details = 4; // JSON object containing device details
+  optional string device_token = 5; // Device token
+  optional Location location = 6; // JSON object containing location details
+  google.protobuf.Timestamp created_on = 7; // Creation timestamp
+  optional google.protobuf.Timestamp modified_on = 8; // Last modification timestamp
+}
+
+// Table definition for account_login_details
+// message AccountLoginDetails {
+//   int64 account_login_details_id = 1; // Primary key for account_login_details table
+//   int64 account_id = 2; // Foreign key referencing account.account_id
+//   google.protobuf.Timestamp login_date_time = 3; // Login timestamp
+//   google.protobuf.Timestamp logout_date_time = 4; // Logout timestamp
+//   string token = 5; // Authentication token
+//   google.protobuf.Timestamp token_valid_upto = 6; // Expiration timestamp for the token
+//   int64 device_id = 7; // Foreign key referencing device.device_id
+// }
+
+
+
+// Table definition for profile_login_details
+message ProfileLoginDetails {
+  optional int64 profile_login_details_id = 1; // Primary key for profile_login_details table
+  // int64 account_login_details_id = 2; // Foreign key referencing account_login_details.account_login_details_id
+  // int64 account_id = 3; // Foreign key referencing account.account_id
+  optional int64 profile_id = 4; // Profile ID
+  ProfileRolesEnum profile_roles_enum = 5; // Role of the account
+  google.protobuf.Timestamp login_date_time = 6; // Login timestamp
+  optional google.protobuf.Timestamp logout_date_time = 7; // Logout timestamp
+  string token = 8; // Authentication token
+  google.protobuf.Timestamp token_valid_upto = 9; // Expiration timestamp for the token
+  optional int64 device_id = 10; // Foreign key referencing device.device_id
+}
+
+// Table definition for parent_profile
+// message ParentProfile {
+//   int64 parent_profile_id = 1; // Primary key for parent_profile table
+//   string user_name = 2; // Name of the account
+//   string email = 3; // Email address of the account
+//   string phone_country = 4; // Country of the phone number
+//   string phone_number = 5; // Phone number of the account
+//   string first_name = 6; // First name of the account holder
+//   string last_name = 7; // Last name of the account holder
+//   string middle_name = 8; // Middle name of the account holder
+//   int32 email_verify = 9; // Flag indicating if the email is verified
+//   int32 phone_verify = 10; // Flag indicating if the phone number is verified
+//   int32 is_active = 11; // Flag indicating if the account is active
+//   int32 is_delete = 12; // Flag indicating if the account is deleted
+//   ProfilePics profile_pics = 13; // JSON object containing profile pictures
+//   google.protobuf.Timestamp created_on = 14; // Creation timestamp
+//   optional int64 created_by = 15; // User who created the entry
+//   optional google.protobuf.Timestamp modified_on = 16; // Last modification timestamp
+//   optional int64 modified_by = 17; // User who last modified the entry
+// }
+
+// Table definition for student_profile
+message StudentProfile {
+  optional int64 student_profile_id = 1; // Primary key for student_profile table
+  string user_name = 2; // Name of the account
+  optional string email = 3; // Email address of the account
+  optional string phone_country = 4; // Country of the phone number
+  optional string phone_number = 5; // Phone number of the account
+  string first_name = 6; // First name of the account holder
+  optional string last_name = 7; // Last name of the account holder
+  optional string middle_name = 8; // Middle name of the account holder
+  optional bool is_profile_verified = 31; // Flag indicating if the profile is verified
+  optional bool is_password_updated = 32; // Flag indicating if the password is updated
+  optional int32 email_verify = 9; // Flag indicating if the email is verified
+  optional int32 phone_verify = 10; // Flag indicating if the phone number is verified
+  optional int32 is_active = 11; // Flag indicating if the account is active
+  optional int32 is_delete = 12; // Flag indicating if the account is deleted
+  repeated ProfilePics profile_pics = 13; // JSON object containing profile pictures
+  // int64 account_id = 14; // Foreign key referencing account.account_id
+  optional int32 class_id = 15; // Class ID
+  optional int32 section_id = 16; // Section ID
+  optional int32 school_id = 17; // School ID
+  optional int32 board_id = 18; // Board ID
+  optional int32 region_id = 19; // Region ID
+  optional int32 medium_id = 20; // Medium ID
+  optional string address = 21; // Address of the student
+  optional string address_lat_long = 22; // Latitude and longitude of the address
+  optional string address_city = 23; // City of the address
+  optional string address_state = 24; // State of the address
+  optional string address_country = 25; // Country of the address
+  optional string address_zip_code = 26; // Zip code of the address
+  google.protobuf.Timestamp created_on = 27; // Creation timestamp
+  optional int64 created_by = 28; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 29; // Last modification timestamp
+  optional int64 modified_by = 30; // User who last modified the entry
+  optional int32 roll_number = 33;
+}
+
+// Enum definition for parent_student_relation_enum
+// enum ParentStudentRelationEnum {
+//   UNDEFINED = 0;
+//   FATHER = 1;
+//   MOTHER = 2;
+//   GRAND_FATHER = 3;
+//   GRAND_MOTHER = 4;
+//   UNCLE = 5;
+//   OTHER = 6;
+// }
+
+// Table definition for parent_student_relation
+// message ParentStudentRelation {
+//   int64 parent_student_relation_id = 1; // Primary key for parent_student_relation table
+//   int64 parent_profile_id = 2; // Foreign key referencing parent_profile.parent_profile_id
+//   int64 student_profile_id = 3; // Foreign key referencing student_profile.student_profile_id
+//   ParentStudentRelationEnum relation = 4; // Relation between parent and student
+//   google.protobuf.Timestamp created_on = 5; // Creation timestamp
+//   optional int64 created_by = 6; // User who created the entry
+//   optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+//   optional int64 modified_by = 8; // User who last modified the entry
+// }
+
+// Table definition for teacher_profile
+message TeacherProfile {
+  optional int64 teacher_profile_id = 1; // Primary key for teacher_profile table
+  string user_name = 2; // Name of the account
+  optional string email = 3; // Email address of the account
+  optional string phone_country = 4; // Country of the phone number
+  optional string phone_number = 5; // Phone number of the account
+  string first_name = 6; // First name of the account holder
+  optional string last_name = 7; // Last name of the account holder
+  optional string middle_name = 8; // Middle name of the account holder
+  optional bool is_profile_verified = 29; // Flag indicating if the profile is verified
+  optional bool is_password_updated = 30; // Flag indicating if the password is updated
+  optional int32 email_verify = 9; // Flag indicating if the email is verified
+  optional int32 phone_verify = 10; // Flag indicating if the phone number is verified
+  optional int32 is_active = 11; // Flag indicating if the account is active
+  optional int32 is_delete = 12; // Flag indicating if the account is deleted
+  optional int32 school_id = 13; // School ID
+  repeated string qualification = 14;
+  optional int32 experience = 15;
+  repeated string teach_mediums = 16;
+  repeated string languages = 17;
+  repeated ProfilePics profile_pics = 18; // JSON object containing profile pictures
+  optional string address = 19; // Address of the teacher
+  optional string address_lat_long = 20; // Latitude and longitude of the address
+  optional string address_city = 21; // City of the address
+  optional string address_state = 22; // State of the address
+  optional string address_country = 23; // Country of the address
+  optional string address_zip_code = 24; // Zip code of the address
+  optional google.protobuf.Timestamp created_on = 25; // Creation timestamp
+  optional int64 created_by = 26; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 27; // Last modification timestamp
+  optional int64 modified_by = 28; // User who last modified the entry
+}
+
+// Enum definition for teacher_roles_enum
+// enum TeacherRolesEnum {
+//   UNDEFINED = 0;
+//   TEACHER_ROLES_TEACHER = 1;
+//   TEACHER_ROLES_SME = 2;
+// }
+
+// Table definition for teacher_role
+// message TeacherRole {
+//   int64 teacher_role_id = 1; // Primary key for teacher_role table
+//   int64 teacher_profile_id = 2; // Foreign key referencing teacher_profile.teacher_profile_id
+//   TeacherRolesEnum role = 3; // Role of the teacher
+// }
+
+
+// Table definition for account_otp
+message Otp {
+  optional int64 otp_id = 1; // Primary key for account_otp table
+  optional int64 profile_id = 2; // Foreign key referencing account.account_id
+  optional int64 device_id = 3; // Foreign key referencing device.device_id
+  string otp = 4; // OTP (One-Time Password)
+  OTPEnum otp_type = 5; // Type of OTP
+  google.protobuf.Timestamp created_on = 6; // Creation timestamp
+  google.protobuf.Timestamp expires_on = 7; // Expiration timestamp for the OTP
+  bool verified = 8; // Verification key to check if the OTP is already used or not
+}
+
+// Table definition for account_passwords
+message ProfilePasswords {
+  optional int64 profile_password_id = 1; // Primary key for account_passwords table
+  optional int64 profile_id = 2; // Foreign key referencing account.account_id
+  string password = 3; // Password
+  string salt = 4; // Salt used for password hashing
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+}
+
+// Table definition for account_role
+message ProfileRole {
+  optional int64 profile_role_id = 1; // Primary key for account_role table
+  optional int64 profile_id = 2; // Foreign key referencing account.account_id
+  ProfileRolesEnum role = 3; // Role of the account
+}
+
+message EmailTemplates {
+  optional int32 email_template_id = 1;
+  string template_name = 2;
+  string template_content = 3;
+  google.protobuf.Timestamp created_on = 4; // Creation timestamp
+  optional google.protobuf.Timestamp modified_on = 5; // Last modification timestamp
+}

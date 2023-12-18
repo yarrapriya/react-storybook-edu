@@ -1,0 +1,229 @@
+syntax = "proto3";
+
+package geneo.analysis.teacher.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "common/common.db.proto";
+
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "analysis apis";
+  }
+  schemes: HTTP;
+};
+
+service TeacherAnalysisAPIServiceV1 {
+
+  rpc getOverallAnalysis (TeacherAnalysisRequest) returns (TeacherAnalysisResponse) {
+    option (google.api.http) = {
+      post: "/geneo.analysis.teacher.apis.TeacherAnalysisAPIServiceV1/getOverallAnalysis"
+      body:'*'
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all class & subject."
+      description: "List all the class & subject with score for teacher."
+      tags: "Analysis"
+    };
+  }
+
+  rpc getClassSubjectAnalysis (TeacherAnalysisClassSubjectRequest) returns (TeacherAnalysisClassSubjectResponse) {
+    option (google.api.http) = {
+      post: "/geneo.analysis.teacher.apis.TeacherAnalysisAPIServiceV1/getClassSubjectAnalysis"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all student analysis and particular class-subject."
+      description: "List all student analysis and particular class-subject with score for teacher."
+      tags: "Analysis"
+    };
+  }
+
+  rpc getClassSubjectChapterAnalysis (TeacherAnalysisClassSubjectRequest) returns (TeacherAnalysisClassSubjectChapterResponse) {
+    option (google.api.http) = {
+      post: "/geneo.analysis.teacher.apis.TeacherAnalysisAPIServiceV1/getClassSubjectChapterAnalysis"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all student analysis and particular class-subject."
+      description: "List all student analysis and particular class-subject with score for teacher."
+      tags: "Analysis"
+    };
+  }
+
+  rpc fetchStudentSubjectPerformanceStats (FetchStudentSubjectPerformanceStatsRequest) returns (FetchStudentSubjectPerformanceStatsResponse) {
+    option (google.api.http) = {
+      post: "/geneo.analysis.teacher.apis.TeacherAnalysisAPIServiceV1/fetchStudentSubjectPerformanceStats"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Analysis for particular student."
+      description: "Analysis for particular student."
+      tags: "Analysis"
+    };
+  }
+}
+
+// Teacher Analysis Request
+message TeacherAnalysisRequest {
+  int64 teacher_id = 1; // ID of the teacher (required)
+}
+
+// Teacher Analysis Response
+message TeacherAnalysisResponse {
+  int32 status = 1; // Response status
+  string code = 2; // Response code
+  string message = 3; // Response message
+  TeacherAnalysis data = 4; // Teacher analysis data (required)
+}
+
+// Teacher Analysis
+message TeacherAnalysis {
+  int64 teacher_id = 1; // ID of the teacher (required)
+  int32 lesson_taughts = 2; // Number of lessons taught (required)
+  int32 assigned_hw_count = 3; // Number of homework assignments (required)
+  float time_spent_in_minutes = 4; // Time spent in minutes (required)
+  repeated ListClassSubjectPerformance list_class_subject_performance = 5; // List of class subject performance (required)
+}
+
+// List Class Subject Performance
+message ListClassSubjectPerformance {
+  int32 subject_id = 1; // ID of the school course (required)
+  string subject = 2; // Subject (required)
+  int32 class_id = 3; // Class type (required)
+  string class = 4; // Class type (required)
+  int32 section_id = 5; // ID of the school class section (required)
+  string section = 6; // Section of the class (required)
+  float score_percent = 7; // Score percentage (required)
+  string subject_icon_image_url = 8; // URL of the subject icon image (required)
+}
+
+// Teacher Analysis Class Subject Request
+message TeacherAnalysisClassSubjectRequest {
+  int64 teacher_id = 1; // ID of the teacher (required)
+  int32 subject_id = 2; // ID of the school course (required)
+  int32 section_id = 3; // ID of the school class section (required)
+}
+
+// Teacher Analysis Class Subject Response
+message TeacherAnalysisClassSubjectResponse {
+  int32 status = 1; // Response status
+  string code = 2; // Response code
+  string message = 3; // Response message
+  TeacherAnalysisClassSubject data = 4; // Teacher analysis class subject data (required)
+}
+
+// Teacher Analysis Class Subject
+message TeacherAnalysisClassSubject {
+  int64 teacher_id = 1; // ID of the teacher (required)
+  int32 subject_id = 2; // ID of the school course (required)
+  int32 section_id = 3; // ID of the school class section (required)
+  int32 lesson_taughts = 4; // Number of lessons taught (required)
+  int32 assigned_hw_count = 5; // Number of homework assignments (required)
+  float time_spent_in_minutes = 6; // Time spent in minutes (required)
+  int32 class_id = 7;
+  string class = 8; // Class type (required)
+  string section = 9; // Section of the class (required)
+  string subject = 10; // Subject (required)
+  float score_percent = 11; // Score percentage (required)
+  string subject_icon_image_url = 12; // URL of the subject icon (required)
+  repeated StudentPerformance students_performance_list = 13; // List of student performance (optional)
+
+}
+
+// Student Performance
+message StudentPerformance {
+  int64 student_id = 1; // ID of the student (required)
+  string name = 2; // Name of the student (required)
+  string profile_image_url = 3; // URL of the profile image (required)
+  float score_percent = 4; // Score percentage (required)
+}
+
+
+message TeacherAnalysisClassSubjectChapterResponse {
+  int32 status = 1; // Response status
+  string code = 2; // Response code
+  string message = 3; // Response message
+  ClassSubjectChapter data = 4; // Teacher analysis class subject data (required)
+}
+
+message ClassSubjectChapter {
+  geneo.common.db.Class.ClassEnum class = 1; // Class type (required)
+  string section = 2; // Section of the class (required)
+  geneo.common.db.Subject.SubjectEnum subject = 3; // Subject (required)
+  float score_percent = 4; // Score percentage (required)
+  string subject_icon_image_url = 5; // URL of the subject icon image (required)
+  int32 section_id = 6; // ID of the school class section (required)
+  repeated ChapterPerformanceStats chapter_performance = 7; // List of chapter performance stats
+}
+// Chapter Performance Stats
+message ChapterPerformanceStats {
+  int32 chapter_id = 1; // ID of the chapter (required)
+  string chapter_title = 2; // Title of the chapter (required)
+  string poster_image_url = 3; // URL of the poster image (required)
+  float score_percent = 4; // Score percentage (required)
+  repeated TopicPerformanceStats topics_performance = 5; // List of topic performance stats
+}
+
+// Topic Performance Stats
+message TopicPerformanceStats {
+  int32 topic_id = 1; // ID of the topic (required)
+  string topic_title = 2; // Title of the topic (required)
+  string poster_image_url = 3; // URL of the poster image (required)
+  float score_percent = 4; // Score percentage (required)
+}
+
+
+
+// Fetch Student Subject Performance Stats Request
+message FetchStudentSubjectPerformanceStatsRequest {
+  int64 teacher_id = 1; // ID of the teacher (required)
+  int64 student_id = 2; // ID of the student (required)
+  int32 subject_id = 3; // ID of the school course (required)
+}
+
+// Fetch Student Subject Performance Stats Response
+message FetchStudentSubjectPerformanceStatsResponse {
+  int32 status = 1; // Response status
+  string code = 2; // Response code
+  string message = 3; // Response message
+  StudentSubjectPerformanceStats data = 4; // Student subject performance stats data (required)
+}
+
+// Student Subject Performance Stats
+message StudentSubjectPerformanceStats {
+  int64 student_id = 1; // ID of the student (required)
+  int32 subject_id = 2; // ID of the school course (required)
+  geneo.common.db.Subject.SubjectEnum subject = 3; // Subject (required)
+  float score_percent = 4; // Score percentage (required)
+  int32 submitted_hw_count = 5; // Number of submitted homework assignments (required)
+  float time_spent_in_min = 6; // Time spent in minutes (required)
+  repeated StudentChapterPerformanceStats chapters_performance = 7; // List of student chapter performance stats (required)
+}
+
+// Student Chapter Performance Stats
+message StudentChapterPerformanceStats {
+  int32 chapter_id = 1; // ID of the chapter (required)
+  string chapter_title = 2; // Title of the chapter (required)
+  string poster_image_url = 3; // URL of the poster image (required)
+  float score_percent = 4; // Score percentage (required)
+  repeated StudentTopicPerformanceStats topics_performance = 5; // List of student topic performance stats
+}
+
+// Student Topic Performance Stats
+message StudentTopicPerformanceStats {
+  int32 topic_id = 1; // ID of the topic (required)
+  string topic_title = 2; // Title of the topic (required)
+  string poster_image_url = 3; // URL of the poster image (required)
+  float score_percent = 4; // Score percentage (required)
+}

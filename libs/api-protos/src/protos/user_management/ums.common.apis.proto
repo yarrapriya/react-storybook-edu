@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package geneo.ums.common.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/field_behavior.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "ums apis";
+  }
+  schemes: HTTP;
+};
+
+service UmsUtilityApiServiceV1 {
+
+  rpc GetStudentNotificationSettings (GetStudentNotificationSettingsRequest) returns (GetStudentNotificationSettingsResponse) {
+    option (google.api.http) = {
+      get: "/api/get-student-notification-settings"
+      response_body: "notification_settings"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists student notification settings."
+      description: "List all the notification settings of a student in the application."
+      tags: "settings"
+    };
+  }
+
+  rpc GetStudentSupportData (GetStudentSupportRequest) returns (GetStudentSupportResponse) {
+    option (google.api.http) = {
+      get: "/api/get-student-support-info"
+      response_body: "support_info"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists student support information."
+      description: "List all the support information like Contact us, FAQ, Privacy policy for the students in the application."
+      tags: "settings"
+    };
+  }
+
+  rpc fetchContentToken (ContentTokenRequest) returns (ContentTokenResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.common.apis.UmsUtilityApiServiceV1/fetchContentToken",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Conetn Token to access the media/content from gcp storages",
+      description: ""
+    };
+  }
+}
+
+
+message ContentTokenRequest {
+}
+
+message ContentTokenAuthRepsonse {
+  string token = 1 [(google.api.field_behavior) = REQUIRED];
+}
+message ContentTokenResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  ContentTokenAuthRepsonse data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetStudentNotificationSettingsRequest {
+  int64 student_id = 1;
+}
+
+message NotificationSettings {
+  bool enable_notifications = 1;
+  string enable_push_notifications = 5;
+  string enable_emails = 2;
+  string enable_sms = 3;
+  string enable_new_content_notifications = 4;
+}
+message GetStudentNotificationSettingsResponse {
+  NotificationSettings notification_settings = 1;
+}
+
+message GetStudentSupportRequest {
+  int64 student_id = 1;
+}
+
+message SupportInfo {
+  message Faq {
+    string question = 1;
+    string response = 2;
+  }
+
+  message ContactUs {
+    string phone = 1;
+    string email = 2;
+  }
+
+  message PrivacyPolicy {
+    string policy = 1;
+    string description = 2;
+  }
+
+  ContactUs contact_us = 1;
+  repeated Faq faq = 3;
+  repeated PrivacyPolicy privacy_policy = 2;
+}
+message GetStudentSupportResponse {
+  SupportInfo support_info = 1;
+}

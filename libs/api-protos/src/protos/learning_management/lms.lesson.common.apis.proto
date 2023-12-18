@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+
+package geneo.lms.lesson.common.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "common/common.db.proto";
+import "content_management/content.db.proto";
+import "content_management/content.common.apis.proto";
+import "learning_management/lms.db.proto";
+import "user_management/ums.db.proto";
+import "google/api/field_behavior.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "Learn apis";
+  }
+  schemes: HTTP;
+};
+
+service LessonCommonAPIServiceV1 {
+  // GetLessonList returns a list of Lesson Plan.
+  rpc fetchLessonsByModule(FetchLessonsByModuleRequest) returns (FetchLessonsByModuleResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.common.apis.LessonCommonAPIServiceV1/fetchLessonsByModule",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get Lesson Plan List for a module"
+      description: "Fetches a list of Lesson Plans."
+    };
+  }
+
+  // FetchLessonContent returns a specific Lesson Plan.
+  rpc fetchLessonContent(FetchLessonContentRequest) returns (FetchLessonContentResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.common.apis.LessonCommonAPIServiceV1/fetchLessonContent",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get Resource By Lesson Plan"
+      description: "Fetches a specific Lesson Plan using its ID."
+    };
+  }
+}
+
+message FetchLessonContentRequest {
+  int64 person_id = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.ProfileRolesEnum person_type = 2 [(google.api.field_behavior) = REQUIRED];
+  string lesson_id = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message FetchLessonsByModuleRequest {
+  int64 person_id = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.ProfileRolesEnum person_type = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 module_id = 3[(google.api.field_behavior) = REQUIRED];
+  int32 section_id = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+message FetchLessonsByModuleResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  LessonsByModule data = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+message LessonsByModule {
+  int32 module_id = 1;
+  geneo.content.common.apis.ChapterTopicMiniInfo topicInfo = 5[(google.api.field_behavior) = REQUIRED];
+  repeated LessonInfo lessons = 2;
+}
+
+
+message LessonInfo {
+  string lesson_id = 1;
+  string title = 2;
+  int32 subject_id = 3;
+  int32 module_id = 4;
+  geneo.content.db.Module.ModuleCategoryEnum module_category =5;
+  int32 estimated_time_in_min = 6;
+  geneo.content.db.CreationStatusEnum creation_status = 7;
+  string poster_image_url = 8;
+  google.protobuf.Timestamp created_on = 9;
+  int64 created_by = 10;
+  google.protobuf.Timestamp modified_on = 11;
+  int64 modified_by = 12;
+  repeated string resource_ids = 13;
+  google.protobuf.Timestamp last_session_time = 14;
+  string teacher_name = 15;
+  string teacher_profile_image_url = 16;
+  geneo.common.db.Subject.SubjectEnum subject = 17;
+}
+
+message TeachClassSubjects {
+  int32 class_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string class = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 section_id = 3 [(google.api.field_behavior) = REQUIRED];
+  string section = 4 [(google.api.field_behavior) = REQUIRED];
+  int32 subject_id = 5 [(google.api.field_behavior) = REQUIRED];
+  string subject = 6 [(google.api.field_behavior) = REQUIRED];
+}
+
+message TeacherLessonInfo {
+  string lesson_id = 1;
+  string title = 2;
+  int32 module_id = 4;
+  geneo.content.db.Module.ModuleCategoryEnum module_category =5;
+  int32 estimated_time_in_min = 6;
+  geneo.content.db.CreationStatusEnum creation_status = 7;
+  string poster_image_url = 8;
+  google.protobuf.Timestamp created_on = 9;
+  int64 created_by = 10;
+  google.protobuf.Timestamp modified_on = 11;
+  int64 modified_by = 12;
+  repeated string resource_ids = 13;
+  google.protobuf.Timestamp last_session_time = 14;
+  geneo.common.db.Class.ClassEnum class = 15;
+  string teacher_name = 17;
+  string teacher_profile_image_url = 18;
+  TeachClassSubjects teach_class_subjects = 19;
+}
+
+message FetchLessonContentResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  LessonContent data = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+
+message LessonContent {
+  string lesson_id = 1;
+  string lesson_title = 2;
+  string lesson_poster_image_url = 3;
+  string lesson_created_by = 4;
+  repeated geneo.content.common.apis.ResourceInfo resources = 5;
+  repeated string learning_outcomes = 6;
+}
+
+message LearningOutcomeInfo {
+  int32 learning_outcome_id = 1;
+  string learning_outcome = 2;
+}
+

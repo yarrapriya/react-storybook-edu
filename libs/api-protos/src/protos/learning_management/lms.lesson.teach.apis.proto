@@ -1,0 +1,215 @@
+syntax = "proto3";
+
+package geneo.lms.lesson.teach.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/field_behavior.proto";
+import "content_management/content.db.proto";
+import "learning_management/lms.lesson.common.apis.proto";
+import "learning_management/lms.db.proto";
+import "common/common.db.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "Teach apis";
+  }
+  schemes: HTTP;
+};
+
+// lessonService manages all operations related to Lesson Plan.
+service LessonTeachAPIServiceV1 {
+    rpc getTeacherLessonList (GetTeacherLessonListRequest) returns (GetTeacherLessonListResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.teach.apis.LessonTeachAPIServiceV1/getTeacherLessonList"
+      body: "*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all Homeworks for teacher."
+      description: "Lists all Homeworks for teacher"
+      tags: "homeworks"
+    };
+  }
+
+  //upsertLesson
+  // EditResourceBylesson updates an existing Lesson Plan or creates a new one if it doesn't exist.
+  rpc upsertLesson(TeacherUpsertLessonRequest) returns (TeacherUpsertLessonResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.teach.apis.LessonTeachAPIServiceV1/upsertLesson",
+      body: "*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create or update a Lesson Plan."
+      description: "If the lesson_id exists, the existing record will be updated. If the lesson_id does not exist, a new record will be created."
+    };
+  }
+
+
+  rpc createTeacherLessonSession(CreateTeacherLessonSessionRequest) returns (TeacherLessonSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.teach.apis.LessonTeachAPIServiceV1/createTeacherLessonSession"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create Lesson Session"
+      description: "Update Lesson Session"
+    };
+  }
+
+
+  rpc updateTeacherLessonSession(UpdateTeacherLessonSessionRequest) returns (TeacherLessonSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.teach.apis.LessonTeachAPIServiceV1/updateTeacherLessonSession"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Update Lesson Session"
+      description: "Update Lesson Session."
+    };
+  }
+
+  rpc getPreviousLessonSessionInfo (GetTeacherPreviousLessonSessionRequest) returns (TeacherPreviousLessonSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.teach.apis.LessonTeachAPIServiceV1/getPreviousLessonSessionInfo"
+      body:"*"
+      response_body: "data"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lesson previous sessions info for teacher"
+      description: "Lesson previous sessions info for teacher"
+      tags: "previous-session-response"
+      };
+  }
+
+  rpc deleteTeacherLessonById (TeacherDeleteLessonRequest) returns (TeacherDeleteLessonResponse){
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.teach.apis.LessonTeachAPIServiceV1/deleteTeacherLessonById"
+      body:"*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Delete lesson for teacher"
+      description: "Delete lesson created by teacher"
+      };
+  }
+}
+
+message TeacherDeleteLessonRequest{
+  string lesson_id = 1;
+  int64 teacher_id = 2;
+}
+
+message TeacherDeleteLessonResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED]; // Status of the response
+  string code = 2 [(google.api.field_behavior) = REQUIRED]; // Code of the response
+  string message = 3 [(google.api.field_behavior) = REQUIRED]; // Message of the response
+}
+
+message TeacherUpsertLessonRequest {
+  optional string lesson_id = 1; // Unique identifier for the lesson
+  optional int64 teacher_id = 2; // ID of the teacher
+  optional string title = 3; // Title of the lesson
+  optional int32 subject_id = 4; // ID of the course
+  optional int32 module_id = 5; // ID of the module
+  optional geneo.content.db.Module.ModuleCategoryEnum module_category =6;
+  optional string poster_image_url = 7; // URL of the poster image
+  repeated string resource_ids = 8; // IDs of associated resources
+  optional string source_lesson_id = 9; // ID of the source lesson
+  optional FileUploadRequest upload_file = 10; // File upload request
+  optional geneo.content.db.CreationStatusEnum creation_status = 11;
+  optional int32 estimated_time_in_min = 12; // Estimated time for the lesson plan
+  repeated string learningOutcomesIds = 13; // Array of learning outcome IDs
+  optional int32 school_class_section_id = 14;//Section Id
+}
+
+message FileUploadRequest {
+  string file_size = 1; // Size of the file
+  string content_type = 2; // Content type of the file
+  string original_file_name = 3; // Original name of the file
+  string file_path = 4; // Path of the file
+}
+
+message TeacherUpsertLessonResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED]; // Status of the response
+  string code = 2 [(google.api.field_behavior) = REQUIRED]; // Code of the response
+  string message = 3 [(google.api.field_behavior) = REQUIRED]; // Message of the response
+  geneo.lms.lesson.common.apis.TeacherLessonInfo data  = 4 [(google.api.field_behavior) = REQUIRED]; // Data for the response
+}
+
+message GetTeacherLessonListRequest {
+  int64 teacher_id = 1 [(google.api.field_behavior) = REQUIRED]; // ID of the teacher
+  optional int32 subject_id = 2 [(google.api.field_behavior) = OPTIONAL]; // ID of the course (optional)
+  optional int32 section_id = 3[(google.api.field_behavior) = OPTIONAL];
+  optional int32 module_id = 4 [(google.api.field_behavior) = OPTIONAL]; // ID of the module (optional)
+}
+
+// Response model for /teacher/homework/list
+message GetTeacherLessonListResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED]; // Status of the response
+  string code = 2 [(google.api.field_behavior) = REQUIRED]; // Code of the response
+  string message = 3 [(google.api.field_behavior) = REQUIRED]; // Message of the response
+  TeacherLessonList data = 4 [(google.api.field_behavior) = REQUIRED]; // Data for the response
+}
+
+message TeacherLessonList {
+  repeated geneo.lms.lesson.common.apis.TeacherLessonInfo lesson_list = 1 [(google.api.field_behavior) = REQUIRED]; // List of lesson information
+}
+
+
+message GetTeacherPreviousLessonSessionRequest {
+  int64 teacher_id = 1;
+  string lesson_id = 2;
+}
+
+message TeacherPreviousLessonSessionResponse {
+  int32 status = 1 ;
+  string code = 2 ;
+  string message = 3 ;
+  TeacherPreviousLessonSession data = 4;
+}
+
+message TeacherPreviousLessonSession {
+  int64 teacher_id = 1;
+  string lesson_id = 2;
+  repeated string completed_resource_ids = 3;
+}
+
+
+message CreateTeacherLessonSessionRequest {
+  int64 teacher_id = 1;                            // ID of the teacher associated with the lesson session.
+  string lesson_id = 2;                             // ID of the lesson associated with the session.
+  int32 school_id = 3;                             // ID of the school where the lesson session takes place.
+  int32 academic_year = 4;                         // Academic year associated with the lesson session.
+  int32 class_id = 5;                               // Grade of the teacher.
+  string section = 6;                              // Section of the teacher.
+  geneo.common.db.Subject.SubjectEnum subject = 7;                              // Subject of the lesson session.
+  optional int32 teacher_lesson_session_id = 8;   // ID of the teacher's lesson session. Nullable field.
+  repeated string session_resource_ids = 9;        // List of resource IDs associated with the session.
+  google.protobuf.Timestamp start_time = 10;       // Start time of the lesson session.
+  geneo.lms.db.SessionStatusEnum session_status = 11;
+  geneo.lms.db.SessionModeEnum session_mode = 12; // Mode of the resource session (e.g., online, offline, etc.)
+}
+
+message TeacherLessonSessionResponse {
+  int32 status = 1 ;
+  string code = 2 ;
+  string message = 3 ;
+  int32 teacher_lesson_session_id = 4;
+}
+
+message UpdateTeacherLessonSessionRequest {
+  int32 teacher_lesson_session_id = 1; // Unique identifier for the teacher's lesson session.
+  int64 teacher_id = 2; // ID of the student associated with the lesson session.
+  string lesson_id = 3; // ID of the lesson associated with the session.
+  geneo.lms.db.SessionStatusEnum session_status = 4; // Status of the lesson session (e.g., in progress, completed, etc.).
+  optional google.protobuf.Timestamp end_time = 5; // End time of the lesson session. Nullable field.
+  optional geneo.lms.db.TeacherLessonSessionMetrics metrics = 6; // Metrics associated with the lesson session. Nullable field.
+}
+
+

@@ -1,0 +1,29 @@
+{
+  "projects": {
+    "default": "schoolnet-india",
+    "production": "geneo-production"
+  },
+  "targets": {
+    "schoolnet-india": {
+      "hosting": {
+        "learn-stage-geneo": [
+          "learn-test-geneo"
+        ],
+        "teach-stage-geneo": [
+          "teach-test-geneo"
+        ]
+      }
+    },
+    "geneo-production": {
+      "hosting": {
+        "teach-prod-geneo": [
+          "teach-geneo"
+        ],
+        "learn-prod-geneo": [
+          "learn-geneo"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

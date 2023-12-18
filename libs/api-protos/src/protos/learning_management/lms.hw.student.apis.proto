@@ -1,0 +1,212 @@
+syntax = "proto3";
+
+package geneo.lms.hw.student.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+import "google/api/field_behavior.proto";
+import "learning_management/lms.db.proto";
+import "content_management/content.db.proto";
+import "common/common.db.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Test Project - 2.0/_git/apis";
+    description: "lms student homework apis";
+  }
+  schemes: HTTP;
+};
+
+service LmsHomewokStudentAPIServiceV1 {
+  rpc getStudentHomeworkList (GetStudentHWListRequest) returns (StudentHomeworkListResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.hw.student.apis.LmsHomewokStudentAPIServiceV1/getStudentHomeworkList"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all Homeworks."
+      description: "Lists all homeworks assigned to the student"
+      tags: "homeworks"
+    };
+  }
+
+  rpc fetchStudentHWResponse (StudentHWResponseFetchRequest) returns (StudentHWResponseFetchResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.hw.student.apis.LmsHomewokStudentAPIServiceV1/fetchStudentHWResponse"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Response of the Homework"
+      description: "To Get student response related to particular homework "
+      tags: "homework student response"
+    };
+  }
+
+  rpc createStudentHomeworkSession(CreateStudentHomeworkSessionRequest) returns (StudentHomeworkSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.hw.student.apis.LmsHomewokStudentAPIServiceV1/createStudentHomeworkSession"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create Lesson Session"
+      description: "Update Lesson Session"
+    };
+  }
+
+  rpc submitStudentHWResponse (StudentHWResponseSubmitRequest) returns (StudentHWResponseSubmitResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.hw.student.apis.LmsHomewokStudentAPIServiceV1/submitStudentHWResponse"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all Homeworks."
+      description: "Save all the Question and answers submitted by a student"
+      tags: "homeworks"
+    };
+  };
+}
+
+message GetStudentHWListRequest {
+    int64 student_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+ message OptionInfo {
+    string option_text = 1 [(google.api.field_behavior) = REQUIRED];
+    bool is_correct = 2 [(google.api.field_behavior) = REQUIRED];
+ }
+
+
+message StudentHWResponseFetchRequest {
+  int64 student_id = 1 [(google.api.field_behavior) = REQUIRED];
+  int32 homework_id = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Message for student's homework response
+message HWStudentResponse {
+  int32 homework_id = 1; // ID of the homework
+  int64 student_id = 2; // ID of the student
+  google.protobuf.Timestamp task_commence_date = 3; // Date when the task was commenced
+  google.protobuf.Timestamp task_target_date = 4; // Target date for task completion
+  google.protobuf.Timestamp task_completed_date = 5; // Date when the task was completed
+  geneo.lms.db.TaskActiveStatusEnum homework_active_status = 6; // Active status of the homework
+  geneo.lms.db.TaskStudentAttemptStatusEnum homework_attempt_status = 7; // Attempt status of the homework
+  geneo.lms.db.TaskEvaluationStatusEnum homework_evaluation_status = 8; // Evaluation status of the homework
+  geneo.lms.db.MetricsModel metrics = 9; // Metrics associated with the homework response
+  repeated geneo.lms.db.StudentTaskResponse responses = 10; // List of student's responses to the homework questions
+  google.protobuf.Timestamp created_on = 11; // Creation timestamp
+  optional google.protobuf.Timestamp modified_on = 12; // Last modification timestamp
+}
+
+message StudentHWResponseFetchResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  HWStudentResponse data = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+
+enum UpdatedMessageEnum {
+  UPDATE_UNDEFINED = 0;
+  UPDATE_SUCCESSFULLY = 1;
+  HOMEWORK_SUBMITTED= 2;
+}
+
+message StudentHomeworkListResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  StudentHomeworkList data = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+message StudentHomeworkList{
+  int64 student_id = 1 [(google.api.field_behavior) = REQUIRED];
+  StudentHWs all_homeworks = 2[(google.api.field_behavior) = REQUIRED];
+}
+
+message StudentHWs {
+  repeated StudentHomeworkTask active = 2[(google.api.field_behavior) = REQUIRED];
+  repeated StudentHomeworkTask ended = 3[(google.api.field_behavior) = REQUIRED];
+}
+
+// Message for active homework list
+message StudentHomeworkTask {
+  int32 homework_id = 1 [(google.api.field_behavior) = REQUIRED]; // ID of the homework
+  string homework_title = 2 [(google.api.field_behavior) = REQUIRED]; // Title of the homework
+  string description = 3 [(google.api.field_behavior) = REQUIRED]; // Description of the homework
+  string homework_poster_img_url = 4 [(google.api.field_behavior) = REQUIRED]; // URL of the homework poster image
+  geneo.content.db.DifficultyLevelEnum difficulty_level = 5 [(google.api.field_behavior) = REQUIRED]; // Difficulty level of the homework
+  float estimated_time_in_min = 6 [(google.api.field_behavior) = REQUIRED]; // Estimated time for which the homework is assigned
+  int64 teacher_id = 7 [(google.api.field_behavior) = REQUIRED]; // ID of the teacher
+  string teacher_name = 8 [(google.api.field_behavior) = REQUIRED]; // Name of the teacher who assigned the homework
+  string teacher_profile_image_url = 9 [(google.api.field_behavior) = REQUIRED]; // URL of the teacher's profile image
+  geneo.lms.db.TaskActiveStatusEnum homework_active_status = 10 [(google.api.field_behavior) = REQUIRED]; // Active status of the homework
+  geneo.lms.db.TaskStudentAttemptStatusEnum student_attempt_status = 11 [(google.api.field_behavior) = REQUIRED]; // Attempt status of the homework for students
+  int32 subject_id = 12 [(google.api.field_behavior) = REQUIRED]; // ID of the course the homework belongs to
+  int32 module_id = 13 [(google.api.field_behavior) = REQUIRED]; // ID of the module the homework belongs to
+  geneo.content.db.Module.ModuleCategoryEnum module_category = 14 [(google.api.field_behavior) = REQUIRED]; // ID of the module
+  string subject = 15 [(google.api.field_behavior) = REQUIRED]; // Subject of the homework
+  int32 no_of_questions = 16 [(google.api.field_behavior) = REQUIRED]; // Number of questions in the homework
+  google.protobuf.Timestamp start_date = 17 [(google.api.field_behavior) = REQUIRED]; // Start date of the homework
+  google.protobuf.Timestamp end_date = 18 [(google.api.field_behavior) = REQUIRED]; // End date of the homework
+  float score_percent = 19 [(google.api.field_behavior) = REQUIRED]; // Score received for the homework
+  string module_name = 20;
+}
+
+message StudentHWResponseSubmitRequest {
+  int64 student_id = 1 [(google.api.field_behavior) = REQUIRED];
+  int32 homework_id = 2 [(google.api.field_behavior) = REQUIRED];
+  geneo.lms.db.TaskStudentAttemptStatusEnum homework_attempt_status = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.lms.db.StudentTaskResponse responses = 4 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp timestamp = 5 [(google.api.field_behavior) = REQUIRED];
+  int32 session_id = 6;
+}
+
+message StudentHWResponseSubmitResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  optional StudentHWAttemptResult attempt_result = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message StudentHWAttemptResult {
+  float response_score = 1;
+  float max_score = 2;
+}
+
+message UpdatedMessageForSubmit {
+ UpdatedMessageEnum updated_message = 1 [(google.api.field_behavior) = REQUIRED];
+ int32 score = 3 [(google.api.field_behavior) = REQUIRED];
+ string message = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+message UpdatedMessage {
+ UpdatedMessageEnum updated_message = 1 [(google.api.field_behavior) = REQUIRED];
+ string gif_url = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateStudentHomeworkSessionRequest {
+  int64 student_id = 1;                            // ID of the student associated with the lesson session.
+  int32 homework_id = 2;                               // Section of the student.
+  google.protobuf.Timestamp start_time = 3;       // Start time of the lesson session.
+  geneo.lms.db.TaskStudentAttemptStatusEnum session_status = 4; // Status of the lesson session (e.g., in progress, completed, etc.).
+  geneo.lms.db.HomeworkSessionModeEnum session_mode = 5; // Mode of the lesson session (e.g., online, offline, etc.).
+}
+
+message StudentHomeworkSessionResponse {
+  int32 status = 1 ;
+  string code = 2 ;
+  string message = 3 ;
+  int32 session_id = 4;
+}
+
+

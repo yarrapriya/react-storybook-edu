@@ -1,0 +1,105 @@
+{
+  "name": "student",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/student/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/student",
+        "index": "apps/student/src/index.html",
+        "baseHref": "/",
+        "main": "apps/student/src/main.tsx",
+        "tsConfig": "apps/student/tsconfig.app.json",
+        "assets": [
+          "apps/student/src/favicon.ico",
+          "apps/student/src/assets",
+          {
+            "input": "libs/shared-ui/src/assets",
+            "glob": "**/*",
+            "output": "/assets/shared-ui/"
+          }
+        ],
+        "styles": ["apps/student/src/styles.css"],
+        "scripts": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/student/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/student/src/environments/environment.ts",
+              "with": "apps/student/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "student:build",
+        "hmr": true,
+        "host": "0.0.0.0",
+        "port": 4201
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "student:build:development"
+        },
+        "production": {
+          "buildTarget": "student:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/student/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "student:build",
+        "host": "0.0.0.0",
+        "port": 4201
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/student/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

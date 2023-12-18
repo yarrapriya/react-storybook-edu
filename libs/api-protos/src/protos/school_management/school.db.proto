@@ -1,0 +1,214 @@
+syntax = "proto3";
+
+package geneo.school.db;
+
+option go_package = ".";
+
+import "google/protobuf/timestamp.proto";
+
+// Table structure for table region
+message Region {
+  optional int32 region_id = 1; // Primary key for region
+  string region_name = 2; // Name of the region
+  google.protobuf.Timestamp created_on = 3; // Creation timestamp
+  optional int64 created_by = 4; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 5; // Last modification timestamp
+  optional int64 modified_by = 6; // User who last modified the entry
+}
+
+// Table structure for table school_group
+message SchoolGroup {
+  optional int32 school_group_id = 1; // Primary key for schoolGroup
+  string school_group_name = 2; // Name of the schoolGroup
+  optional int32 region_id = 3; // Foreign key referencing region.region_id
+  string address = 4; // Address of the schoolGroup
+  optional string address_lat_long = 5; // Latitude and longitude of the schoolGroup address
+  string address_city = 6; // City of the schoolGroup address
+  string address_state = 7; // State of the schoolGroup address
+  string address_country = 8; // Country of the schoolGroup address
+  string address_zip_code = 9; // Zip code of the schoolGroup address
+  google.protobuf.Timestamp created_on = 10; // Creation timestamp
+  optional int64 created_by = 11; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 12; // Last modification timestamp
+  optional int64 modified_by = 13; // User who last modified the entry
+  optional string school_group_logo_image_url = 14;
+}
+
+// Table structure for table school
+message School {
+  optional int32 school_id = 1; // Primary key for school
+  optional int32 school_group_id = 2; // Foreign key referencing schoolGroup.school_group_id
+  string school_name = 3; // Name of the school
+  optional int32 region_id = 4; // Foreign key referencing region.region_id
+  string address = 5; // Address of the school
+  optional string address_lat_long = 6; // Latitude and longitude of the school address
+  string address_city = 7; // City of the school address
+  string address_state = 8; // State of the school address
+  string address_country = 9; // Country of the school address
+  string address_zip_code = 10; // Zip code of the school address
+  google.protobuf.Timestamp created_on = 11; // Creation timestamp
+  optional int64 created_by = 12; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 13; // Last modification timestamp
+  optional int64 modified_by = 14; // User who last modified the entry
+  optional string branch_name = 15;
+  optional string school_logo_image_url = 16;
+  SPOCInfo school_spoc_info = 17;
+  SPOCInfo geneo_spoc_info = 18;
+  optional string udise_id = 19;
+  optional bool is_active = 20;
+  SchoolKyanInfo school_kyan_info = 21;
+}
+
+message SPOCInfo {
+  string name =1;
+  string email =2;
+  string phone =3;
+}
+
+message SchoolKyanInfo {
+  string school_id = 1;
+  string school_name = 2;
+  repeated string kYan_serial_nos = 3;
+}
+
+// Table structure for table school_subscription
+message SchoolSubscription {
+  optional int32 school_subscription_id = 1; // Primary key for schoolSubscription
+  optional int32 school_group_id = 2; // Foreign key referencing schoolGroup.school_group_id
+  int32 school_id = 3; // Foreign key referencing school.school_id
+  int32 num_licenses = 4; // Number of licenses for the subscription
+  int64 payment_transaction_id = 5; // ID of the payment transaction
+  google.protobuf.Timestamp subscription_start_date = 6; // Start date of the subscription
+  google.protobuf.Timestamp subscription_end_date = 7; // End date of the subscription
+  bool active_subscription = 8; // Flag indicating if the subscription is active
+  google.protobuf.Timestamp created_on = 9; // Creation timestamp
+  optional int64 created_by = 10; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 11; // Last modification timestamp
+  optional int64 modified_by = 12; // User who last modified the entry
+}
+
+// Table structure for table school_medium_board
+// message SchoolMediumBoard {
+//   optional int32 school_medium_board_id = 1; // Primary key for schoolMediumBoard
+//   int32 school_id = 2; // Foreign key referencing school.school_id
+//   int32 board_id = 3; // Foreign key referencing common.board.board_id
+//   int32 teach_medium_id = 4; // Foreign key referencing common.teachMedium.teach_medium_id
+//   google.protobuf.Timestamp created_on = 5; // Creation timestamp
+//   optional int64 created_by = 6; // User who created the entry
+//   optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+//   optional int64 modified_by = 8; // User who last modified the entry
+// }
+
+// Table structure for table school_holiday
+// message SchoolHoliday {
+//   optional int32 school_holiday_id = 1; // Primary key for schoolHoliday
+//   int32 school_medium_board_id = 2; // Foreign key referencing schoolMediumBoard.school_medium_board_id
+//   string holiday_name = 3; // Name of the holiday
+//   string holiday_description = 4; // Description of the holiday
+//   google.protobuf.Timestamp holiday_date = 5; // Date of the holiday
+//   bool holiday_full_day = 6; // Flag indicating if the holiday is a full day
+//   string holiday_half_day_session = 7; // Half day session of the holiday (first or second)
+//   google.protobuf.Timestamp created_on = 8; // Creation timestamp
+//   optional int64 created_by = 9; // User who created the entry
+//   optional google.protobuf.Timestamp modified_on = 10; // Last modification timestamp
+//   optional int64 modified_by = 11; // User who last modified the entry
+// }
+
+// SchoolClass represents a table containing information about school classes.
+// message SchoolClass {
+//   optional int32 school_class_id = 1; // Unique identifier for the school class. (Primary Key)
+//   int32 class_id = 2; // ID of the class associated with the school class. (Foreign Key: common.class)
+//   int32 school_id
+//   // int32 school_medium_board_id = 3; // ID of the school's medium or educational board. (Foreign Key: school_management.school_medium_board)
+//   google.protobuf.Timestamp created_on = 4; // Timestamp indicating when the record was created.
+//   optional int64 created_by = 5; // ID of the user who created the record. Default value is 0.
+//   optional google.protobuf.Timestamp modified_on = 6; // Timestamp indicating when the record was last modified.
+//   optional int64 modified_by = 7; // ID of the user who last modified the record. Default value is 0.
+// }
+
+// Table structure for table school_class_section
+message SchoolClassSection {
+  optional int32 school_class_section_id = 1; // Primary key for schoolClassSection
+  string section_name = 2; // Name of the section
+  int32 class_id = 3; // ID of the class associated with the school class. (Foreign Key: common.class)
+  int32 academic_year_id = 4; // Foreign key referencing common.academicYear.academic_year_id;
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+  int32 school_id = 9;
+  optional bool isActive = 10;
+}
+
+// Table structure for table course
+message Course {
+  optional int32 course_id = 1; // Primary key for course
+  int32 board_id = 2; // Foreign key referencing common.board.board_id
+  int32 class_id = 3; // Foreign key referencing common.class.class_id
+  int32 subject_id = 4; // Foreign key referencing common.subject.subject_id
+  int32 teach_medium_id = 5; // Foreign key referencing common.teachMedium.teach_medium_id
+  // int32 academic_year_id = 6; // Foreign key referencing common.academicYear.academic_year_id
+  int32 book_id = 6; // Foreign key referencing common.book.book_id
+  int32 code = 7; // Code of the course
+  string name = 8; // Name of the course
+  string short_description = 9; // Short description of the course
+  optional string long_description = 10; // Long description of the course
+  google.protobuf.Timestamp created_on = 11; // Creation timestamp
+  optional int64 created_by = 12; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 13; // Last modification timestamp
+  optional int64 modified_by = 14; // User who last modified the entry
+}
+
+// Table structure for table school_course
+message SchoolCourse {
+  optional int32 school_course_id = 1; // Primary key for schoolCourse
+  int32 school_id = 2; // Foreign key referencing school.school_id
+  int32 course_id = 3; // Foreign key referencing course.course_id
+  int32 academic_year_id = 4; // Foreign key referencing common.academicYear.academic_year_id
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+  optional bool isActive = 9;
+}
+
+// Table structure for table school_teacher_class_course
+message SchoolTeacherCourse {
+  optional int32 school_teacher_course_id = 1; // Primary key for schoolTeacherClassCourse
+  int32 school_course_id = 2; // Foreign key referencing schoolCourse.school_course_id
+  int32 school_class_section_id = 3; // Foreign key referencing schoolClassSection.school_class_section_id
+  int64 teacher_id = 4; // User ID of the teacher
+  // int32 academic_year_id = 5; // Foreign key referencing common.academicYear.academic_year_id
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+  optional bool isActive = 9;
+}
+
+// Table structure for table school_class_section_student
+// message SchoolClassSectionStudent {
+//   optional int32 school_class_section_student_id = 1; // Primary key for schoolClassSectionStudent
+//   int32 school_class_id = 2; // Foreign key referencing schoolClass.school_class_id
+//   int32 school_class_section_id = 3; // Foreign key referencing schoolClassSection.school_class_section_id
+//   int64 student_id = 4; // User ID of the student
+//   int32 academic_year_id = 5; // Foreign key referencing common.academicYear.academic_year_id
+//   google.protobuf.Timestamp created_on = 6; // Creation timestamp
+//   optional int64 created_by = 7; // User who created the entry
+//   optional google.protobuf.Timestamp modified_on = 8; // Last modification timestamp
+//   optional int64 modified_by = 9; // User who last modified the entry
+// }
+
+// Table structure for table school_student_course
+message SchoolStudentCourse {
+  optional int32 school_student_course_id = 1; // Primary key for schoolStudentCourse
+  int64 student_id = 2; // User ID of the student
+  int32 school_course_id = 3; // Foreign key referencing schoolCourse.school_course_id
+  optional int32 school_class_section_id = 4; // Foreign key referencing schoolClassSectionStudent.school_class_section_student_id
+  optional int64 created_by = 5; // User who created the entry
+  google.protobuf.Timestamp created_on = 6; // Creation timestamp
+  optional int64 modified_by = 7; // User who last modified the entry
+  optional google.protobuf.Timestamp modified_on = 8; // Last modification timestamp
+  optional bool isActive = 9;
+}
+

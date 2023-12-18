@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+
+package geneo.lms.lesson.learn.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "common/common.db.proto";
+import "learning_management/lms.db.proto";
+import "learning_management/lms.lesson.common.apis.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "Learn apis";
+  }
+  schemes: HTTP;
+};
+
+// lessonService manages all operations related to Lesson Plan.
+service LessonLearnAPIServiceV1 {
+
+
+  rpc createStudentLessonSession(CreateStudentLessonSessionRequest) returns (StudentLessonSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.learn.apis.LessonLearnAPIServiceV1/createStudentLessonSession"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create Lesson Session"
+      description: "Update Lesson Session"
+    };
+  }
+
+  rpc updateStudentLessonSession(UpdateStudentLessonSessionRequest) returns (StudentLessonSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.learn.apis.LessonLearnAPIServiceV1/updateStudentLessonSession"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Update Lesson Session"
+      description: "Update Lesson Session."
+    };
+  }
+
+  rpc getPreviousLessonSessionInfo (GetStudentPreviousLessonSessionRequest) returns (StudentPreviousLessonSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.learn.apis.LessonLearnAPIServiceV1/getPreviousLessonSessionInfo"
+      body:"*"
+      response_body: "data"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lesson previous sessions info for student"
+      description: "Lesson previous sessions info for student"
+      tags: "previous-session-response"
+    };
+  }
+
+  rpc getStudentOngoingLessonList (GetStudentOngoingLessonListRequest) returns (GetStudentOngoingLessonListResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.lesson.learn.apis.LessonLearnAPIServiceV1/getStudentOngoingLessonList"
+        body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "List ongoing Lessons"
+      description: "Lists all ongoing lessons for a student."
+      tags: "Lessons"
+    };
+  }
+}
+
+message CreateStudentLessonSessionRequest {
+  int64 student_id = 1;                            // ID of the student associated with the lesson session.
+  string lesson_id = 2;                             // ID of the lesson associated with the session.
+  int32 school_id = 3;                             // ID of the school where the lesson session takes place.
+  int32 academic_year = 4;                         // Academic year associated with the lesson session.
+  int32 class_id = 5;                               // Grade of the student.
+  string section = 6;                              // Section of the student.
+  geneo.common.db.Subject.SubjectEnum subject = 7;                              // Subject of the lesson session.
+  optional int32 teacher_lesson_session_id = 8;   // ID of the teacher's lesson session. Nullable field.
+  repeated string session_resource_ids = 9;        // List of resource IDs associated with the session.
+  google.protobuf.Timestamp start_time = 10;       // Start time of the lesson session.
+  geneo.lms.db.SessionStatusEnum session_status = 11; // Status of the lesson session (e.g., in progress, completed, etc.).
+  geneo.lms.db.SessionModeEnum session_mode = 12; // Mode of the lesson session (e.g., online, offline, etc.).
+
+}
+
+message UpdateStudentLessonSessionRequest {
+  optional int32 student_lesson_session_id = 1; // Unique identifier for the student's lesson session.
+  int64 student_id = 2; // ID of the student associated with the lesson session.
+  string lesson_id = 3; // ID of the lesson associated with the session.
+  geneo.lms.db.SessionStatusEnum session_status = 4; // Status of the lesson session (e.g., in progress, completed, etc.).
+  optional int32 teacher_lesson_session_id = 5; // ID of the teacher's lesson session. Nullable field.
+  optional google.protobuf.Timestamp end_time = 6; // End time of the lesson session. Nullable field.
+  optional geneo.lms.db.StudentLessonSessionMetrics metrics = 7; // Metrics associated with the lesson session. Nullable field.
+  geneo.lms.db.SessionModeEnum session_mode = 12; // Mode of the lesson session (e.g., online, offline, etc.).
+}
+
+message StudentLessonSessionResponse {
+  int32 status = 1 ;
+  string code = 2 ;
+  string message = 3 ;
+  int32 student_lesson_session_id = 4;
+}
+
+
+message GetStudentPreviousLessonSessionRequest {
+  int64 student_id = 1;
+  string lesson_id = 2;
+}
+
+message StudentPreviousLessonSessionResponse {
+  int32 status = 1 ;
+  string code = 2 ;
+  string message = 3 ;
+  StudentPreviousLessonSession data = 4;
+}
+
+message StudentPreviousLessonSession {
+  int64 student_id = 1;
+  string lesson_id = 2;
+  repeated string completed_resource_ids = 3;
+}
+
+
+message GetStudentOngoingLessonListRequest {
+  int64 student_id = 1;
+  int32 subject_id = 2; //optional
+  int32 chapter_id = 3; //optional
+  int32 topic_id = 4; //optional
+  optional int32 section_id = 5[(google.api.field_behavior) = OPTIONAL];
+}
+
+message GetStudentOngoingLessonListResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  StudentOngoingLessonList data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message StudentOngoingLessonList {
+  repeated geneo.lms.lesson.common.apis.LessonInfo lessons = 1;
+}
+

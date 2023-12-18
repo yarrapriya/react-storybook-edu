@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package geneo.lms.student.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/field_behavior.proto";
+import "learning_management/lms.lesson.common.apis.proto";
+import "content_management/content.common.apis.proto";
+import "content_management/content.db.proto";
+import "common/common.db.proto";
+import "user_management/ums.db.proto";
+
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Test Project - 2.0/_git/apis";
+    description: "gRPC gateway";
+  }
+  schemes: HTTPS;
+};
+
+
+service LmsStudentAPIServiceV1 {
+  rpc fetchStudentBanner (FetchBannerRequest) returns (FetchBannerResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.student.apis.LmsStudentAPIServiceV1/fetchStudentBanner"
+        body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Banners"
+      description: "Lists all banners for a student."
+      tags: "Banners"
+    };
+  }
+
+  rpc getStudentResourceRecommendation (GetStudentResourceRecommendationRequest) returns (GetStudentResourceRecommendationResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.student.apis.LmsStudentAPIServiceV1/getStudentResourceRecommendation"
+        body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Recommendations"
+      description: "Fetches resource recommendations for a student."
+      tags: "Recommendations"
+    };
+  }
+
+  rpc getStudentLessonRecommendation (GetStudentLessonRecommendationRequest) returns (GetStudentLessonRecommendationResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.student.apis.LmsStudentAPIServiceV1/getStudentLessonRecommendation"
+        body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Recommendations"
+      description: "Fetches lesson recommendations for a student."
+      tags: "Recommendations"
+    };
+  }
+
+
+}
+
+message FetchBannerRequest {
+  int64 student_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message FetchBannerResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated Banner banners = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message Banner {
+  // Add banner fields here.
+  int32 banner_id = 1;
+  optional string imageUrl = 2;
+  string title = 3;
+  optional string deeplink_url = 4;
+  bool isActive = 5;
+  int32 class_id = 6;
+  string class = 7;
+  optional int32 section_id = 8;
+  optional string section = 9;
+  float score_percent = 10;
+}
+
+message GetStudentResourceRecommendationRequest {
+  int64 student_id = 1;
+  optional int32 subject_id = 2; //optional
+  optional int32 chapter_id = 3; //optional
+  optional int32 topic_id = 4; //optional
+}
+
+message GetStudentResourceRecommendationResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  GetStudentResourceRecommendation data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetStudentResourceRecommendation {
+  int64 student_id =  1 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.content.common.apis.ResourceInfo resources = 2 [(google.api.field_behavior) = REQUIRED];
+  optional int32 subject_id = 3; //optional
+  optional int32 chapter_id = 4; //optional
+  optional int32 topic_id = 5; //optional
+}
+
+message GetStudentLessonRecommendationRequest {
+  int64 student_id = 1;
+  optional int32 subject_id = 2; //optional
+  optional int32 chapter_id = 3; //optional
+  optional int32 topic_id = 4; //optional
+}
+
+message GetStudentLessonRecommendationResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  GetStudentLessonRecommendation data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetStudentLessonRecommendation {
+  int64 student_id =  1 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.lms.lesson.common.apis.LessonInfo lessons = 2 [(google.api.field_behavior) = REQUIRED];
+  optional int32 subject_id = 3; //optional
+  optional int32 chapter_id = 4; //optional
+  optional int32 topic_id = 5; //optional
+}

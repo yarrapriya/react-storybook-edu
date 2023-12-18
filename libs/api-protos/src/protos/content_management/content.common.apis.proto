@@ -1,0 +1,264 @@
+syntax = "proto3";
+
+package geneo.content.common.apis;
+
+option go_package = ".";
+
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "user_management/ums.db.proto";
+import "content_management/content.db.proto";
+import "common/common.db.proto";
+
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Test Project - 2.0/_git/apis";
+    description: "gRPC gateway";
+  }
+  schemes: HTTPS;
+};
+
+service ContentCommonAPIServiceV1 {
+  rpc fetchSubjectChapterInfo (FetchSubjectChapterInfoRequest) returns (FetchSubjectChapterInfoResponse) {
+    option (google.api.http) = {
+      post: "/geneo.content.common.apis.ContentCommonAPIServiceV1/fetchSubjectChapterInfo"
+      body: "*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Add a ContentCommonAPI"
+      description: "Add a sample to the server."
+      tags: "ContentCommonAPIs"
+    };
+  }
+
+  rpc fetchChapterTopicInfo (FetchChapterTopicInfoRequest) returns (FetchChapterTopicInfoResponse) {
+    option (google.api.http) = {
+      post: "/geneo.content.common.apis.ContentCommonAPIServiceV1/fetchChapterTopicInfo"
+      body: "*"
+      response_body: "data"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Add a ContentCommonAPI"
+      description: "Add a sample to the server."
+      tags: "ContentCommonAPIs"
+    };
+  }
+
+  rpc fetchChapterResources (FetchChapterResourcesRequest) returns (FetchChapterResourcesResponse) {
+    option (google.api.http) = {
+      post: "/geneo.content.common.apis.ContentCommonAPIServiceV1/fetchChapterResources"
+      body: "*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Add a ContentCommonAPI"
+      description: "Add a sample to the server."
+      tags: "ContentCommonAPIs"
+    };
+  }
+
+  rpc fetchTopicResources (FetchTopicResourceInfoRequest) returns (FetchTopicResourceInfoResponse) {
+    option (google.api.http) = {
+      post: "/geneo.content.common.apis.ContentCommonAPIServiceV1/fetchTopicResources"
+      body: "*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Add a ContentCommonAPI"
+      description: "Add a sample to the server."
+      tags: "ContentCommonAPIs"
+    };
+  }
+
+  // FetchResourceContent fetches a specific resource by its ID.
+  rpc fetchResourceContent(FetchResourceContentRequest) returns (FetchResourceContentResponse) {
+    option (google.api.http) = {
+      post: "/geneo.content.common.apis.ContentCommonAPIServiceV1/fetchResourceContent",
+      body: "*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get Resource By Id"
+      description: "Fetches a specific resource using its ID."
+    };
+  }
+
+  rpc fetchResourceContentV2(FetchResourceContentRequest) returns (FetchResourceContentResponse) {
+    option (google.api.http) = {
+      post: "/geneo.content.common.apis.ContentCommonAPIServiceV1/fetchResourceContentv2",
+      body: "*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get Resource By Id"
+      description: "Fetches a specific resource using its ID."
+    };
+  }
+}
+
+message SubjectChapterMiniInfo {
+  int32 chapter_id = 1;
+  // int32 course_id = 2; // fetch bookid based on course id which will be in req body
+  int32 chapter_no = 3; // module rank
+  string chapter_title = 4; // module name
+  string poster_images_url = 5; // module poster_image_url
+  int32 no_of_topics = 6; // fetch count of topics based on parent_module_id,MODULE_CATEGORY_TOPIC,book_id
+}
+
+message TopicContentStats {
+  int32 lesson_count = 1;
+  int32 question_count = 2;
+}
+
+message ChapterTopicMiniInfo {
+  int32 topic_id = 1;
+  int32 topic_no = 2;
+  string topic_title = 3;
+  TopicContentStats topic_content_stats = 4;
+  string poster_images_url = 5; // module poster_image_url
+}
+
+message FetchSubjectChapterInfoRequest {
+  int64 person_id = 1;
+  geneo.ums.db.ProfileRolesEnum person_type = 2;
+  int32 subject_id = 3;
+  int32 book_id = 4;
+  int32 section_id = 5;
+}
+
+message FetchSubjectChapterInfoResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  FetchSubjectChapterInfo data = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+message FetchSubjectChapterInfo {
+  int32 subject_id = 1;
+  string subject_book_image_url = 2;
+  repeated SubjectChapterMiniInfo response = 3;
+  int32 ongoing_chapter_id = 4;
+}
+
+message FetchChapterTopicInfoRequest {
+  int64 person_id = 1;
+  geneo.ums.db.ProfileRolesEnum person_type = 2;
+  int32 subject_id = 3;
+  int32 chapter_id = 4;
+  int32 section_id = 5;
+}
+
+message FetchChapterTopicInfoResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  ChapterTopicInfo data = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+message ChapterTopicInfo {
+  int32 subject_id = 1;
+  SubjectChapterMiniInfo chapterInfo = 5[(google.api.field_behavior) = REQUIRED];
+  repeated ChapterTopicMiniInfo chapter_topics = 3;
+}
+
+message FetchTopicResourceInfoRequest {
+  int64 person_id = 1;
+  geneo.ums.db.ProfileRolesEnum person_type = 2;
+  int32 subject_id = 3;
+  int32 chapter_id = 4;
+  int32 topic_id = 5;
+}
+
+message FetchTopicResourceInfoResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  TopicResourceInfo data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message TopicResourceInfo {
+  int32 subject_id = 1;
+  int32 chapter_id = 2;
+  int32 topic_id = 3;
+  repeated CategoryResourceMap category_resource_map = 4;
+
+}
+
+message FetchChapterResourcesRequest {
+  int64 person_id = 1;
+  geneo.ums.db.ProfileRolesEnum person_type = 2;
+  int32 subject_id = 3;
+  int32 chapter_id = 4;
+}
+
+message ResourceInfo {
+  string resource_id = 1;                     // Unique identifier for the resource.
+  string title = 2;                         // Title of the resource.
+  string poster_image_url = 3;                // URL of the resource's poster image.
+  int32 estimated_time_in_min = 4;             // Estimated time to complete the resource in minutes.
+  geneo.content.db.Resource.ResourceEnum resource_type = 5;          // Type of the resource (e.g., video, document).
+  geneo.content.db.ResourceCategoryEnum resource_category_type = 6;  // Category type of the resource (e.g., science, history).
+  int32 rank = 7;                           // Rank of the resource for sorting or prioritization.
+}
+
+message CategoryResourceMap {
+  geneo.content.db.ResourceCategoryEnum category = 1 [(google.api.field_behavior) = REQUIRED];
+  string category_description =2 [(google.api.field_behavior) = REQUIRED];
+  string category_title = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated ResourceInfo category_resources =4 [(google.api.field_behavior) = REQUIRED];
+  int32 module_id = 5 [(google.api.field_behavior) = REQUIRED];
+  geneo.content.db.Module.ModuleCategoryEnum module_category =6 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ChapterResources {
+  int32 subject_id = 1;
+  int32 chapter_id = 2;
+  repeated CategoryResourceMap category_resource_map = 3;
+}
+
+message FetchChapterResourcesResponse {
+  int32 status = 1  [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  ChapterResources data = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+
+//Resource
+message ResourceListResponse {
+  int32 status = 1 ;
+  string code = 2 ;
+  string message = 3 ;
+  repeated geneo.content.common.apis.ResourceInfo data = 4;
+}
+
+
+message FetchResourceContentRequest {
+  int64 person_id = 1[(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.ProfileRolesEnum person_type = 2[(google.api.field_behavior) = REQUIRED];
+  string resource_id = 3[(google.api.field_behavior) = REQUIRED];
+}
+
+// Response message for FetchResourceContent.
+message FetchResourceContentResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  ResourceContent data = 4[(google.api.field_behavior) = REQUIRED];
+}
+
+
+message ResourceContent {
+  string resource_id = 1[(google.api.field_behavior) = REQUIRED];
+  string title = 2;
+  string poster_image_url = 3;
+  int32 estimated_time_in_min = 4;
+  geneo.content.db.Resource.ResourceEnum resource_type = 5;
+  geneo.content.db.ResourceCategoryEnum resource_category = 6;
+  string gcp_json_url  = 7;
+}

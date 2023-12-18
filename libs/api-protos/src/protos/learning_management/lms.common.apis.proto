@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+package geneo.lms.common.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "common/common.db.proto";
+import "learning_management/lms.db.proto";
+
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Test Project - 2.0/_git/apis";
+    description: "gRPC gateway";
+  }
+  schemes: HTTPS;
+};
+
+service LmsCommonAPIServiceV1 {
+  rpc createTeacherResourceSession(CreateTeacherResourceSessionRequest) returns (CreateTeacherResourceSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.common.apis.LmsCommonAPIServiceV1/createTeacherResourceSession",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Create teacher resource session."
+    };
+  }
+
+  rpc updateTeacherResourceSession(UpdateTeacherResourceSessionRequest) returns (UpdateTeacherResourceSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.common.apis.LmsCommonAPIServiceV1/updateTeacherResourceSession",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Update teacher resource session."
+    };
+  }
+
+  rpc createStudentResourceSession(CreateStudentResourceSessionRequest) returns (CreateStudentResourceSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.common.apis.LmsCommonAPIServiceV1/createStudentResourceSession",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Create student resource session."
+    };
+  }
+
+  rpc updateStudentResourceSession(UpdateStudentResourceSessionRequest) returns (UpdateStudentResourceSessionResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.common.apis.LmsCommonAPIServiceV1/updateStudentResourceSession",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Update student resource session."
+    };
+  }
+}
+
+// CreateTeacherResourceSessionRequest represents a request to create a teacher's resource session.
+message CreateTeacherResourceSessionRequest {
+  int64 teacher_id = 1; // ID of the teacher associated with the resource session
+  string resource_id = 2; // ID of the resource associated with the session
+  int32 school_id = 3; // ID of the school where the lesson session takes place
+  int32 academic_year = 4; // Academic year associated with the lesson session
+  int32 class_id = 5; // Grade associated with the lesson session
+  string section = 6; // Section associated with the lesson session
+  geneo.common.db.Subject.SubjectEnum subject = 7; // Subject associated with the lesson session
+  int32 module_id = 8; // Module ID associated with the lesson session
+  int32 teacher_lesson_session_id = 9; // ID of the teacher's lesson session (optional)
+  geneo.lms.db.SessionModeEnum session_mode = 10; // Mode of the resource session (e.g., online, offline, etc.)
+  google.protobuf.Timestamp start_time = 11; // Start time of the resource session
+  geneo.lms.db.SessionStatusEnum session_status = 12; // Status of the resource session
+}
+
+// CreateTeacherResourceSessionResponse represents a response for creating a teacher's resource session.
+message CreateTeacherResourceSessionResponse {
+  int32 status = 1; // Status code
+  string code = 2; // Error code
+  string message = 3; // Error message
+  int32 teacher_resource_session_id = 4; // ID of the created teacher's resource session
+}
+
+// UpdateTeacherResourceSessionRequest represents a request to update a teacher's resource session.
+message UpdateTeacherResourceSessionRequest {
+  int32 teacher_resource_session_id = 1; // ID of the teacher's resource session
+  int64 teacher_id = 2; // ID of the teacher associated with the resource session
+  string resource_id = 3; // ID of the resource associated with the session
+  geneo.lms.db.SessionStatusEnum session_status = 4; // Status of the resource session
+  repeated geneo.lms.db.TeacherContentResponse response = 5; // Teacher content response (JSON as string)
+  google.protobuf.Timestamp end_time = 6; // End time of the resource session (optional)
+}
+
+// UpdateTeacherResourceSessionResponse represents a response for updating a teacher's resource session.
+message UpdateTeacherResourceSessionResponse {
+  int32 status = 1; // Status code
+  string code = 2; // Error code
+  string message = 3; // Error message
+  int32 teacher_resource_session_id = 4; // ID of the updated teacher's resource session
+}
+
+// CreateStudentResourceSessionRequest represents a request to create a student's resource session.
+message CreateStudentResourceSessionRequest {
+  int64 student_id = 1; // ID of the student associated with the resource session
+  string resource_id = 2; // ID of the resource associated with the session
+  int32 school_id = 3; // ID of the school where the lesson session takes place
+  int32 academic_year = 4; // Academic year associated with the resource session
+  int32 class_id = 5; // Grade associated with the resource session
+  string section = 6; // Section associated with the resource session
+  geneo.common.db.Subject.SubjectEnum subject = 7; // Subject associated with the resource session
+  int32 module_id = 8; // Module ID associated with the resource session
+  int32 student_lesson_session_id = 9; // ID of the student's lesson session (optional)
+  geneo.lms.db.SessionModeEnum session_mode = 10; // Mode of the resource session (e.g., online, offline, etc.)
+  google.protobuf.Timestamp start_time = 11; // Start time of the resource session
+  geneo.lms.db.SessionStatusEnum session_status = 12;
+}
+
+// CreateStudentResourceSessionResponse represents a response for creating a student's resource session.
+message CreateStudentResourceSessionResponse {
+  int32 status = 1; // Status code
+  string code = 2; // Error code
+  string message = 3; // Error message
+  int32 student_resource_session_id = 4; // ID of the created student's resource session
+}
+
+// UpdateStudentResourceSessionRequest represents a request to update a student's resource session.
+message UpdateStudentResourceSessionRequest {
+  int32 student_resource_session_id = 1; // ID of the student's resource session
+  int64 student_id = 2; // ID of the student associated with the resource session
+  string resource_id = 3; // ID of the resource associated with the session
+  geneo.lms.db.SessionStatusEnum session_status = 4; // Status of the resource session
+  repeated geneo.lms.db.TeacherContentResponse response = 5; // Teacher content response (JSON as string)
+  google.protobuf.Timestamp end_time = 6; // End time of the resource session (optional)
+}
+
+// UpdateStudentResourceSessionResponse represents a response for updating a student's resource session.
+message UpdateStudentResourceSessionResponse {
+  int32 status = 1; // Status code
+  string code = 2; // Error code
+  string message = 3; // Error message
+  int32 student_resource_session_id = 4; // ID of the updated student's resource session
+}

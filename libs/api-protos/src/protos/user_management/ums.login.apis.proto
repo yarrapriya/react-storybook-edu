@@ -1,0 +1,746 @@
+syntax = "proto3";
+
+package geneo.ums.login.apis;
+
+option go_package = ".";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/field_behavior.proto";
+import "user_management/ums.db.proto";
+import "common/common.db.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "ums apis";
+  }
+  schemes: HTTP;
+};
+
+service UMSLoginAPIServiceV1 {
+
+  rpc createStudentProfile(CreateStudentProfileRequest) returns (StudentLoginResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/createStudentProfile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create student profile"
+      description: "Student profile will be created"
+      tags: "User Profile"
+    };
+  }
+
+  rpc fetchStudentProfile(StudentProfileFetchRequest) returns (StudentLoginResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/fetchStudentProfile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get student profile"
+      description: "Student profile will be fetched"
+      tags: "User Profile"
+    };
+  }
+
+  rpc updateStudentProfile(UpdateStudentProfileRequest) returns (StudentLoginResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/updateStudentProfile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Update student profile"
+      description: "Student profile will be updated"
+      tags: "User Profile"
+    };
+  }
+
+  rpc validateUser(ValidateUserRequest) returns (ValidateUserResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/validateUser"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "User Validation"
+      description: "User will be validated in the application"
+      tags: "User Validation"
+    };
+  }
+
+  rpc studentLoginWithUsername(UserLoginRequest) returns (StudentLoginResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/studentLoginWithUsername"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Student login with username and password"
+      description: "Student login to the application"
+      tags: "Login with UserName"
+    };
+  }
+
+  rpc studentLoginWithPhonePassword(LoginWithPhonePasswordRequest) returns (StudentLoginWithPhoneOrEmailPasswordResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/studentLoginWithPhonePassword"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Student login with phone and password"
+      description: "Student login to the application"
+      tags: "Login with Phone"
+    };
+  }
+
+  rpc studentLoginWithEmailPassword(LoginWithEmailPasswordRequest) returns (StudentLoginWithPhoneOrEmailPasswordResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/studentLoginWithEmailPassword"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Student login with email and password"
+      description: "Student login to the application"
+      tags: "Login with Email"
+    };
+  }
+
+  rpc createTeacherProfile(CreateTeacherProfileRequest) returns (TeacherLoginResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/createTeacherProfile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create teacher profile"
+      description: "Teacher profile will be created"
+      tags: "User Profile"
+    };
+  }
+
+  rpc fetchTeacherProfile(FetchTeacherProfileRequest) returns (TeacherLoginResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/fetchTeacherProfile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get teacher profile"
+      description: "Teacher profile will be fetched"
+      tags: "User Profile"
+    };
+  }
+
+  rpc updateTeacherProfile(UpdateTeacherProfileRequest) returns (TeacherLoginResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/updateTeacherProfile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Update teacher profile"
+      description: "Teacher profile will be updated"
+      tags: "User Profile"
+    };
+  }
+
+  rpc teacherLoginWithUsername(UserLoginRequest) returns (TeacherLoginResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/teacherLoginWithUsername"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Teacher login with username and password"
+      description: "Teacher login to the application"
+      tags: "Login with UserName"
+    };
+  }
+
+  rpc teacherLoginWithPhonePassword(LoginWithPhonePasswordRequest) returns (TeacherLoginWithPhoneOrEmailPasswordResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/teacherLoginWithPhonePassword"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Teacher login with phone and password"
+      description: "Teacher login to the application"
+      tags: "Login with Phone"
+    };
+  }
+
+  rpc teacherLoginWithEmailPassword(LoginWithEmailPasswordRequest) returns (TeacherLoginWithPhoneOrEmailPasswordResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/teacherLoginWithEmailPassword"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Teacher login with email and password"
+      description: "Teacher login to the application"
+      tags: "Login with Email"
+    };
+  }
+
+  rpc getPhoneOTP(GetPhoneOTPRequest) returns (GetOTPResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/getPhoneOTP"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get phone OTP"
+      description: "Get OTP on phone for the verification or login etc"
+      tags: "OTP service"
+    };
+  }
+
+  rpc getEmailOTP(GetEmailOTPRequest) returns (GetOTPResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/getEmailOTP"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get email OTP"
+      description: "Get OTP on email for the verification or login etc"
+      tags: "OTP service"
+    };
+  }
+
+  rpc verifyOTP(VerifyOTPRequest) returns (VerifyOTPResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/verifyOTP"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Verify OTP"
+      description: "Verify OTP and send the response based on the otp type"
+      tags: "OTP service"
+    };
+  }
+
+  rpc resetPasswordInit(ResetPasswordInitRequest) returns (GetOTPResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/resetPasswordInit"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Initiate reset password"
+      description: "Reset password request by email or phone"
+      tags: "Reset Password"
+    };
+  }
+
+  rpc resetPasswordFinal(ResetPasswordFinalRequest) returns (ResetPasswordFinalResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/resetPasswordFinal"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Reset password final"
+      description: "Reset password request by email or phone"
+      tags: "Reset Password"
+    };
+  }
+
+  rpc updatePassword(UpdatePasswordRequest) returns (ResetPasswordFinalResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/updatePassword"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Update password"
+      description: "Update password after login to the system"
+      tags: "Reset Password"
+    };
+  }
+
+  rpc logout(LogoutRequest) returns (ResetPasswordFinalResponse) {
+    option (google.api.http) = {
+      post: "/geneo.ums.login.apis.UMSLoginAPIServiceV1/logout"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "User logout"
+      description: "User will be loggedout from the application"
+      tags: "Logout"
+    };
+  }
+}
+
+// message OTPEnum{
+//   enum Enum{
+//     OTP_UNDEFINED = 0;
+//     STUDENT_REGISTRATION = 1;
+//     STUDENT_LOGIN = 2;
+//     TEACHER_REGISTRATION = 3;
+//     TEACHER_LOGIN = 4;
+//     STUDENT_VERIFICATION = 5;
+//     TEACHER_VERIFICATION = 6;
+//     STUDENT_RESET_PASSWORD = 7;
+//     TEACHER_RESET_PASSWORD = 8;
+//   }
+// }
+
+// Enum for USER_LOGIN_TYPE
+enum LoginTypeEnum {
+  LOGIN_TYPE_UNDEFINED = 0; // Represents an undefined Login type
+  LOGIN_TYPE_USERNAME = 1; // Represents an login type for username
+  LOGIN_TYPE_PHONE_NUMBER = 2; // Represents an login type for phone number
+  LOGIN_TYPE_EMAIL = 3; // Represents an login type for email
+}
+
+message ProfilePicInfo {
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+  int32 size = 2 [(google.api.field_behavior) = REQUIRED];
+  string url = 3 [(google.api.field_behavior) = REQUIRED];
+  string mime_type = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateStudentProfileRequest {
+  string user_name = 1 [(google.api.field_behavior) = REQUIRED];
+  optional string phone_number = 2;
+  optional string phone_country = 3;
+  optional string email = 4;
+  string first_name = 5 [(google.api.field_behavior) = REQUIRED];
+  optional string last_name = 6;
+  optional string middle_name = 7;
+  optional bool is_profile_verified = 30; // Flag indicating if the profile is verified
+  optional bool is_password_updated = 31; // Flag indicating if the password is updated
+  optional int32 email_verify = 8;
+  optional int32 phone_verify = 9;
+  string password = 29 [(google.api.field_behavior) = REQUIRED];
+  optional int32 is_active = 10;
+  optional int32 is_delete = 11;
+  int32 class_id = 12 [(google.api.field_behavior) = REQUIRED];
+  int32 section_id = 13 [(google.api.field_behavior) = REQUIRED];
+  int32 school_id = 14 [(google.api.field_behavior) = REQUIRED];
+  int32 board_id = 15 [(google.api.field_behavior) = REQUIRED];
+  int32 region_id = 16;
+  int32 medium_id = 17 [(google.api.field_behavior) = REQUIRED];
+  repeated ProfilePicInfo profile_pics = 18;
+  optional string address = 19;
+  optional string address_lat_long = 20;
+  optional string address_city = 21;
+  optional string address_state = 22;
+  optional string address_country = 23;
+  optional string address_zip_code = 24;
+  optional google.protobuf.Timestamp created_on = 25;
+  optional int64 created_by = 26;
+  optional google.protobuf.Timestamp modified_on = 27;
+  optional int64 modified_by = 28;
+}
+
+message StudentProfileFetchRequest {
+  int64 student_profile_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message UpdateStudentProfileRequest {
+  int64 student_profile_id = 29 [(google.api.field_behavior) = REQUIRED];
+  optional string user_name = 1;
+  optional string phone_number = 2;
+  optional string phone_country = 3;
+  optional string email = 4;
+  optional string first_name = 5;
+  optional string last_name = 6;
+  optional string middle_name = 7;
+  optional bool is_profile_verified = 30; // Flag indicating if the profile is verified
+  optional bool is_password_updated = 31; // Flag indicating if the password is updated
+  optional int32 email_verify = 8;
+  optional int32 phone_verify = 9;
+  optional int32 is_active = 10;
+  optional int32 is_delete = 11;
+  optional int32 class_id = 12;
+  optional int32 section_id = 13;
+  optional int32 school_id = 14;
+  optional int32 board_id = 15;
+  optional int32 region_id = 16;
+  optional int32 medium_id = 17;
+  repeated ProfilePicInfo profile_pics = 18;
+  optional string address = 19;
+  optional string address_lat_long = 20;
+  optional string address_city = 21;
+  optional string address_state = 22;
+  optional string address_country = 23;
+  optional string address_zip_code = 24;
+  optional google.protobuf.Timestamp created_on = 25;
+  optional int64 created_by = 26;
+  optional google.protobuf.Timestamp modified_on = 27;
+  optional int64 modified_by = 28;
+}
+
+// message UpdateStudentProfileResponse {
+//   int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+//   string code = 2 [(google.api.field_behavior) = REQUIRED];
+//   string message = 3 [(google.api.field_behavior) = REQUIRED];
+//   StudentLoginResponseType data = 4 [(google.api.field_behavior) = REQUIRED];
+// }
+
+// message AccountInformation {
+//   string user_name = 1;
+//   string phone_number = 2;
+//   string phone_country = 3;
+//   string email = 4;
+//   string first_name = 5;
+//   string last_name = 6;
+//   string middle_name = 7;
+//   int32 email_verify = 8;
+//   int32 phone_verify = 9;
+//   int32 is_active = 10;
+//   int32 is_delete = 11;
+//   repeated ProfilePicInfo profile_pics = 12;
+// }
+
+message StudentProfileResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  CreateStudentProfileRequest data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateTeacherProfileRequest {
+  string user_name = 1 [(google.api.field_behavior) = REQUIRED];
+  optional string phone_number = 2 [(google.api.field_behavior) = REQUIRED];
+  optional string phone_country = 3 [(google.api.field_behavior) = REQUIRED];
+  optional string email = 4;
+  string first_name = 5 [(google.api.field_behavior) = REQUIRED];
+  optional string last_name = 6;
+  optional string middle_name = 7;
+  optional bool is_profile_verified = 29; // Flag indicating if the profile is verified
+  optional bool is_password_updated = 30; // Flag indicating if the password is updated
+  optional int32 email_verify = 8;
+  optional int32 phone_verify = 9;
+  string password = 28 [(google.api.field_behavior) = REQUIRED];
+  optional int32 is_active = 10;
+  optional int32 is_delete = 11;
+  int32 school_id = 12 [(google.api.field_behavior) = REQUIRED];
+  repeated string qualification = 27 [(google.api.field_behavior) = REQUIRED];;
+  optional int32 experience = 13 [(google.api.field_behavior) = REQUIRED];
+  repeated string teach_mediums = 14;
+  repeated string languages = 15;
+  repeated ProfilePicInfo profile_pics = 16;
+  optional string address = 17;
+  optional string address_lat_long = 18;
+  optional string address_city = 19;
+  optional string address_state = 20;
+  optional string address_country = 21;
+  optional string address_zip_code = 22;
+  optional google.protobuf.Timestamp created_on = 23;
+  optional int64 created_by = 24;
+  optional google.protobuf.Timestamp modified_on = 25;
+  optional int64 modified_by = 26;
+}
+
+message TeacherProfileResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  CreateTeacherProfileRequest data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message FetchTeacherProfileRequest {
+  int64 teacher_profile_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message UpdateTeacherProfileRequest {
+  int64 teacher_profile_id = 28 [(google.api.field_behavior) = REQUIRED];
+  optional string user_name = 1;
+  optional string phone_number = 2;
+  optional string phone_country = 3;
+  optional string email = 4;
+  optional string first_name = 5;
+  optional string last_name = 6;
+  optional string middle_name = 7;
+  optional bool is_profile_verified = 29; // Flag indicating if the profile is verified
+  optional bool is_password_updated = 30; // Flag indicating if the password is updated
+  optional int32 email_verify = 8;
+  optional int32 phone_verify = 9;
+  optional int32 is_active = 10;
+  optional int32 is_delete = 11;
+  optional int32 school_id = 12;
+  repeated string qualification = 27;
+  optional int32 experience = 13;
+  repeated string teach_mediums = 14;
+  repeated string languages = 15;
+  repeated ProfilePicInfo profile_pics = 16;
+  optional string address = 17;
+  optional string address_lat_long = 18;
+  optional string address_city = 19;
+  optional string address_state = 20;
+  optional string address_country = 21;
+  optional string address_zip_code = 22;
+  optional google.protobuf.Timestamp created_on = 23;
+  optional int64 created_by = 24;
+  optional google.protobuf.Timestamp modified_on = 25;
+  optional int64 modified_by = 26;
+}
+
+message UserLoginRequest {
+  string user_name = 1 [(google.api.field_behavior) = REQUIRED];
+  string password = 2 [(google.api.field_behavior) = REQUIRED];
+  // string type = 3;
+}
+
+message LoginWithPhonePasswordRequest {
+  string phone_number = 1 [(google.api.field_behavior) = REQUIRED];
+  string password = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message LoginWithEmailPasswordRequest {
+  string email = 1 [(google.api.field_behavior) = REQUIRED];
+  string password = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// message TeacherLoginWithPhoneOrEmailPasswordRequest {
+//   oneof data {
+//     string phone_number = 2 [(google.api.field_behavior) = REQUIRED];
+//     string email = 3 [(google.api.field_behavior) = REQUIRED];
+//    }
+//   string password = 4 [(google.api.field_behavior) = REQUIRED];
+// }
+
+message StudentLoginWithPhoneOrEmailPasswordResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated StudentLoginResponseType data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message TeacherLoginWithPhoneOrEmailPasswordResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated TeacherLoginResponseType data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message SubjectList {
+  int32 subject_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string subject_name = 2 [(google.api.field_behavior) = REQUIRED];
+  geneo.common.db.Subject.SubjectEnum subject_enum = 3 [(google.api.field_behavior) = REQUIRED];
+  // string bg_color = 3 [(google.api.field_behavior) = REQUIRED];
+  // string border_color = 4 [(google.api.field_behavior) = REQUIRED];
+  string text_color = 4 [(google.api.field_behavior) = REQUIRED];
+  string icon_url = 5 [(google.api.field_behavior) = REQUIRED];
+  int32 bookId = 6 [(google.api.field_behavior) = REQUIRED];
+  // bgColor: "#FFF3C3" , borderColor: "#F8C807"  ,  textColor: "#DCB000", subjectName:"english", subjectId: 1, iconUrl: ""}
+}
+
+message TeachClassSubjects {
+  int32 class_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string class_name = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 section_id = 3 [(google.api.field_behavior) = REQUIRED];
+  string section_name = 4 [(google.api.field_behavior) = REQUIRED];
+  repeated SubjectList subjects = 5 [(google.api.field_behavior) = REQUIRED];
+}
+
+message SchoolBoardMediumInfo {
+  int32 school_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string school_name = 2 [(google.api.field_behavior) = REQUIRED];
+  repeated BoardMediumInfo board_medium_info = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message TeacherLoginResponseType {
+  int64 teacher_profile_id = 30 [(google.api.field_behavior) = REQUIRED];
+  string user_name = 1 [(google.api.field_behavior) = REQUIRED];
+  string phone_number = 2 [(google.api.field_behavior) = REQUIRED];
+  string phone_country = 3 [(google.api.field_behavior) = REQUIRED];
+  string email = 4;
+  string first_name = 5 [(google.api.field_behavior) = REQUIRED];
+  string last_name = 6;
+  string middle_name = 7;
+  bool is_profile_verified = 31; // Flag indicating if the profile is verified
+  bool is_password_updated = 32; // Flag indicating if the password is updated
+  int32 email_verify = 8;
+  int32 phone_verify = 9;
+  int32 is_active = 10;
+  int32 is_delete = 11;
+  repeated SchoolBoardMediumInfo school_details = 12 [(google.api.field_behavior) = REQUIRED];
+  repeated string qualification = 27 [(google.api.field_behavior) = REQUIRED];;
+  int32 experience = 13 [(google.api.field_behavior) = REQUIRED];
+  repeated string teach_mediums = 14;
+  repeated string languages = 15;
+  repeated ProfilePicInfo profile_pics = 16;
+  string address = 17;
+  string address_lat_long = 18;
+  string address_city = 19;
+  string address_state = 20;
+  string address_country = 21;
+  string address_zip_code = 22;
+  // google.protobuf.Timestamp created_on = 23;
+  // int64 created_by = 24;
+  // google.protobuf.Timestamp modified_on = 25;
+  // int64 modified_by = 26;
+  repeated TeachClassSubjects teach_class_subjects = 28 [(google.api.field_behavior) = REQUIRED];
+  string token = 29 [(google.api.field_behavior) = REQUIRED];
+}
+
+message TeacherLoginResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  TeacherLoginResponseType data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message SchoolInfo {
+  int32 school_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string school_name = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ClassSectionInfo {
+  int32 class_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string class_name = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 section_id = 3 [(google.api.field_behavior) = REQUIRED];
+  string section_name = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message BoardMediumInfo {
+  int32 board_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string board_name = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 medium_id = 3 [(google.api.field_behavior) = REQUIRED];
+  string medium_name = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message StudentLoginResponseType {
+  int64 student_profile_id = 31 [(google.api.field_behavior) = REQUIRED];
+  string user_name = 1 [(google.api.field_behavior) = REQUIRED];
+  string phone_number = 2 [(google.api.field_behavior) = REQUIRED];
+  string phone_country = 3 [(google.api.field_behavior) = REQUIRED];
+  string email = 4;
+  string first_name = 5 [(google.api.field_behavior) = REQUIRED];
+  string last_name = 6;
+  string middle_name = 7;
+  bool is_profile_verified = 32; // Flag indicating if the profile is verified
+  bool is_password_updated = 33; // Flag indicating if the password is updated
+  int32 email_verify = 8;
+  int32 phone_verify = 9;
+  int32 is_active = 10;
+  int32 is_delete = 11;
+  SchoolInfo school_details = 12 [(google.api.field_behavior) = REQUIRED];
+  // int64 section_id = 13 [(google.api.field_behavior) = REQUIRED];
+  ClassSectionInfo class_section_details = 14 [(google.api.field_behavior) = REQUIRED];
+  BoardMediumInfo board_medium_details = 15 [(google.api.field_behavior) = REQUIRED];
+  int32 region_id = 16;
+  // int64 medium_id = 17 [(google.api.field_behavior) = REQUIRED];
+  repeated ProfilePicInfo profile_pics = 18;
+  string address = 19;
+  string address_lat_long = 20;
+  string address_city = 21;
+  string address_state = 22;
+  string address_country = 23;
+  string address_zip_code = 24;
+  // google.protobuf.Timestamp created_on = 25;
+  // int64 created_by = 26;
+  // google.protobuf.Timestamp modified_on = 27;
+  // int64 modified_by = 28;
+  repeated SubjectList learn_subjects = 29 [(google.api.field_behavior) = REQUIRED];
+  string token = 30 [(google.api.field_behavior) = REQUIRED];
+}
+
+message StudentLoginResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  StudentLoginResponseType data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetPhoneOTPRequest {
+  string phone_number = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.OTPEnum otp_type = 2 [(google.api.field_behavior) = REQUIRED];
+  optional string user_name = 3;
+}
+
+message GetEmailOTPRequest {
+  string email = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.OTPEnum otp_type = 2 [(google.api.field_behavior) = REQUIRED];
+  optional string user_name = 3;
+}
+
+message GetOTPResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  string verification_code = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message VerifyOTPRequest {
+  string otp = 1 [(google.api.field_behavior) = REQUIRED];
+  string verification_code = 2 [(google.api.field_behavior) = REQUIRED];
+  string check = 3 [(google.api.field_behavior) = REQUIRED]; //It can be mobile number or email
+}
+
+message OTPProfileResponse {
+  repeated StudentLoginResponseType student_profiles = 1;
+  repeated TeacherLoginResponseType teacher_profiles = 2;
+  string token = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message VerifyOTPResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  // oneof data {
+  //   StudentProfileInfo student_profile_info = 4;
+  //   TeacherProfileInfo teacher_profile_info = 5;
+  // };
+  OTPProfileResponse data = 4;
+}
+
+message ResetPasswordInitRequest {
+  string user_login_input = 1 [(google.api.field_behavior) = REQUIRED];
+  LoginTypeEnum login_type = 2 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.ProfileRolesEnum role = 3 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.OTPEnum otp_type = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// message ResetPasswordInitResponse {
+//   int32 status = 1;
+//   string code = 2;
+//   string message = 3;
+//   string verification_code = 4;
+// }
+
+message ResetPasswordFinalRequest {
+  string user_name = 1 [(google.api.field_behavior) = REQUIRED];
+  // string otp = 1 [(google.api.field_behavior) = REQUIRED];
+  string verification_code = 2 [(google.api.field_behavior) = REQUIRED];
+  // string check = 3 [(google.api.field_behavior) = REQUIRED]; //It can be mobile number or email
+  string password = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ResetPasswordFinalResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message UpdatePasswordRequest {
+  int64 profile_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string old_password = 2 [(google.api.field_behavior) = REQUIRED];
+  string new_password = 3 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.ProfileRolesEnum role = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message LogoutRequest {
+  int64 profile_id = 1 [(google.api.field_behavior) = REQUIRED];
+  geneo.ums.db.ProfileRolesEnum role = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ValidateUserRequest {
+  string user_login_input = 1 [(google.api.field_behavior) = REQUIRED];
+  LoginTypeEnum login_type = 2;
+  geneo.ums.db.ProfileRolesEnum role = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message UserInfo {
+  string first_name = 1;
+  string last_name = 2;
+  string user_name = 3;
+  string phone_number = 4;
+  string email = 5;
+  bool is_profile_verified = 6;
+  bool is_password_updated = 7;
+  int32 is_active = 8;
+  int32 email_verify = 9;
+  int32 phone_verify = 10;
+};
+message ValidateUserResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated UserInfo data = 4 [(google.api.field_behavior) = REQUIRED];
+}

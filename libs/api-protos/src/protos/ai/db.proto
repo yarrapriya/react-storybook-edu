@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package geneo.ai.db;
+
+
+import "google/protobuf/timestamp.proto";
+import "common/common.db.proto";
+
+
+message StudentEvent {
+
+  int64 student_id = 1;
+  string session_id = 2;
+
+  google.protobuf.Timestamp timestamp = 3;
+
+  string event = 4;
+  string event_type = 5;
+  string action_id = 6;
+  bool is_active = 18 [default = true];
+
+  google.protobuf.Timestamp created_on = 16; // Timestamp when the session was created. Nullable field.
+  optional int64 created_by = 17; // ID of the user who created the session. Nullable field.
+  optional google.protobuf.Timestamp modified_on = 18; // Timestamp when the session was last modified. Nullable field.
+  optional int64 modified_by = 19; // ID of the user who last modified the session. Nullable field.
+}
+
+
+message TeacherEvent {
+
+  int64 teacher_id = 1;
+  string session_id = 2;
+
+  google.protobuf.Timestamp timestamp = 3;
+
+  string event = 4;
+  string event_type = 5;
+  string action_id = 6;
+  bool is_active = 18 [default = true];
+
+  google.protobuf.Timestamp created_on = 16; // Timestamp when the session was created. Nullable field.
+  optional int64 created_by = 17; // ID of the user who created the session. Nullable field.
+  optional google.protobuf.Timestamp modified_on = 18; // Timestamp when the session was last modified. Nullable field.
+  optional int64 modified_by = 19; // ID of the user who last modified the session. Nullable field.
+}
+
+message InteractionButtonEvent {
+
+  int64 student_id = 1;
+  string session_id = 2;
+
+  google.protobuf.Timestamp timestamp = 3;
+
+  string event = 4;
+  string action_id = 6;
+  string context = 7;
+  string url = 8;
+  string name = 9;
+  bool is_active = 18 [default = true];
+
+  google.protobuf.Timestamp created_on = 16; // Timestamp when the session was created. Nullable field.
+  optional int64 created_by = 17; // ID of the user who created the session. Nullable field.
+  optional google.protobuf.Timestamp modified_on = 18; // Timestamp when the session was last modified. Nullable field.
+  optional int64 modified_by = 19; // ID of the user who last modified the session. Nullable field.
+}

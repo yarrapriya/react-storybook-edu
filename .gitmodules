@@ -1,0 +1,3 @@
+[submodule "libs/api-protos"]
+	path = libs/api-protos
+	url = https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2

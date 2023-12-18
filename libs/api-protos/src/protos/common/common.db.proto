@@ -1,0 +1,248 @@
+syntax = "proto3";
+
+package geneo.common.db;
+
+option go_package = ".";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+
+message AcademicYear {
+  // Enum for AcademicYearEnum
+  enum Enum {
+    UNDEFINED = 0;
+    AY_2023_2024 = 1; // Academic year 2023-2024
+    AY_2024_2025 = 2; // Academic year 2024-2025
+    AY_2025_2026 = 3; // Academic year 2025-2026
+    AY_2026_2027 = 4; // Academic year 2026-2027
+    AY_2027_2028 = 5; // Academic year 2027-2028
+    AY_2028_2029 = 6; // Academic year 2028-2029
+    AY_2029_2030 = 7; // Academic year 2029-2030
+    AY_2030_2031 = 8; // Academic year 2030-2031
+  }
+
+  optional int32 academic_year_id = 1; // Primary key for academic year
+  Enum academic_year = 2; // Academic year enum value
+  google.protobuf.Timestamp academic_year_start = 3; // Start date of the academic year
+  google.protobuf.Timestamp academic_year_end = 4; // End date of the academic year
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+}
+
+message Board {
+    // Enum for BoardEnum
+    enum BoardEnum {
+    UNDEFINED = 0; // Board: undefined
+    CBSE = 1; // Board: CBSE
+    ICSE = 2; // Board: ICSE
+    IB = 3; // Board: IB
+    IGCSE = 4; // Board: IGCSE
+    NIOS = 5; // Board: NIOS
+    STATE_ANDHRAPRADESH = 6; // Board: State - Andhra Pradesh
+    STATE_ASSAM = 7; // Board: State - Assam
+    STATE_BIHAR = 8; // Board: State - Bihar
+    STATE_RAJASTHAN = 9; // Board: State - Rajasthan
+    STATE_MANIPUR = 10; // Board: State - Manipur
+    STATE_CHHATTISGARH = 11; // Board: State - Chhattisgarh
+    STATE_ORISSA = 12; // Board: State - Odisha
+    STATE_GOA = 13; // Board: State - Goa
+    STATE_GUJARAT = 14; // Board: State - Gujarat
+    STATE_HARYANA = 15; // Board: State - Haryana
+    STATE_HIMACHALPRADESH = 16; // Board: State - Himachal Pradesh
+    STATE_JK = 17; // Board: State - Jammu and Kashmir
+    STATE_JHARKHAND = 18; // Board: State - Jharkhand
+    STATE_KARNATAKA = 19; // Board: State - Karnataka
+    STATE_KERALA = 20; // Board: State - Kerala
+    STATE_MADHYAPRADESH = 21; // Board: State - Madhya Pradesh
+    STATE_MAHARASHTRA = 22; // Board: State - Maharashtra
+    STATE_MEGHALAYA = 23; // Board: State - Meghalaya
+    STATE_MIZORAM = 24; // Board: State - Mizoram
+    STATE_NAGALAND = 25; // Board: State - Nagaland
+    STATE_PUNJAB = 26; // Board: State - Punjab
+    STATE_TAMILNADU = 27; // Board: State - Tamil Nadu
+    STATE_TRIPURA = 28; // Board: State - Tripura
+    STATE_UTTARPRADESH = 29; // Board: State - Uttar Pradesh
+    STATE_UTTARAKHAND = 30; // Board: State - Uttarakhand
+    STATE_WESTBENGAL = 31; // Board: State - West Bengal
+    }
+
+  optional int32 board_id = 1; // Primary key for board
+  BoardEnum board = 2; // Board enum value
+  string board_name = 3; // Board Name
+  string board_short_code = 4; // Short code for the board
+  string board_affiliation = 5; // Affiliation details of the board
+  google.protobuf.Timestamp created_on = 6; // Creation timestamp
+  optional int64 created_by = 7; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 8; // Last modification timestamp
+  optional int64 modified_by = 9; // User who last modified the entry
+}
+
+message TeachMedium {
+  optional int32 teach_medium_id = 1; // Primary key for teach medium
+  string language = 2; // Language used for teaching
+  google.protobuf.Timestamp created_on = 3; // Creation timestamp
+  optional int64 created_by = 4; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 5; // Last modification timestamp
+  optional int64 modified_by = 6; // User who last modified the entry
+}
+
+message Class {
+  // Enum for ClassEnum
+  enum ClassEnum {
+    UNDEFINED = 0;
+    CLASS_PRE_KG = 1; // Class: Pre KG
+    CLASS_KG = 2; // Class: KG
+    CLASS_LKG = 3; // Class: LKG
+    CLASS_HKG = 4; // Class: HKG
+    CLASS_1 = 5; // Class: 1
+    CLASS_2 = 6; // Class: 2
+    CLASS_3 = 7; // Class: 3
+    CLASS_4 = 8; // Class: 4
+    CLASS_5 = 9; // Class: 5
+    CLASS_6 = 10; // Class: 6
+    CLASS_7 = 11; // Class: 7
+    CLASS_8 = 12; // Class: 8
+    CLASS_9 = 13; // Class: 9
+    CLASS_10 = 14; // Class: 10
+    CLASS_11 = 15; // Class: 11
+    CLASS_12 = 16; // Class: 12
+  }
+  optional int32 class_id = 1; // Primary key for class
+  ClassEnum class_ = 2; // Class enum value
+  string class_name = 3; // Class Name
+  google.protobuf.Timestamp created_on = 4; // Creation timestamp
+  optional int64 created_by = 5; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 6; // Last modification timestamp
+  optional int64 modified_by = 7; // User who last modified the entry
+}
+
+message Subject {
+  // Enum for SubjectEnum
+  enum SubjectEnum {
+    UNDEFINED = 0;
+    M = 1; // Subject: Mathematics
+    S = 2; // Subject: Science
+    SP = 3; // Subject: Physics
+    SC = 4; // Subject: Chemistry
+    SB = 5; // Subject: Biology
+    E = 6; // Subject: English
+    EG = 7; // Subject: English Grammar
+    ELIT = 8; // Subject: English Literature
+    ELANG = 9; // Subject: English Language
+    HIST = 10; // Subject: History
+    GEOG = 11; // Subject: Geography
+    ICT = 12; // Subject: Information and Communication Technology
+    EVS = 13; // Subject: Environmental Studies
+    SS = 14; // Subject: Social Science
+    CIV = 15; // Subject: Civics
+    URD = 16; // Subject: Urdu
+    H = 17; // Subject: Hindi
+    SANS = 18; // Subject: Sanskrit
+    MAR = 19; // Subject: Marathi
+    GUJ = 20; // Subject: Gujarati
+    ECO = 21; // Subject: Economics
+    GK = 22; // Subject: General Knowledge
+    BIZ = 23; // Subject: Business Studies
+    ACCT = 24; // Subject: Accountancy
+    STATS = 25; // Subject: Statistics
+    LR = 26; // Subject: Logical Reasoning
+    VOCAB = 27; // Subject: Vocabulary
+    GAME = 28; // Subject: Games
+    APT = 29; // Subject: Aptitude
+    GS = 30; // Subject: General Studies
+    LANG = 31; // Subject: Foreign Language
+    SAMPLE = 32; // Subject: Sample
+    INDIA = 33; // Subject: Indian Studies
+    ENTMT = 34; // Subject: Entertainment
+    SPORTS = 35; // Subject: Sports
+    SBI_PO = 36; // Subject: SBI PO Exam
+    IBPS_PO = 37; // Subject: IBPS PO Exam
+    BANK_PO = 38; // Subject: Bank PO Exam
+    GOVT = 39; // Subject: Government Exams
+    PS = 40; //Subject: Political Science
+    SPL = 41; //Subject: Social and Political Life
+    TRAINING = 42; //Subject: Training
+  }
+  optional int32 subject_id = 1; // Primary key for subject
+  SubjectEnum subject = 2; // Subject enum value
+  string subject_name = 3; // Subject Name
+  string subject_description = 4; // Description of the subject
+  bool subject_is_language = 5; // Indicates if the subject is a language
+  string text_color = 6;
+  optional string icon_url = 7;
+  google.protobuf.Timestamp created_on = 8; // Creation timestamp
+  optional int64 created_by = 9; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 10; // Last modification timestamp
+  optional int64 modified_by = 11; // User who last modified the entry
+}
+
+message BookChapterTopicQuestionsInfo {
+  int32 start_page_no = 1;
+}
+
+message Book {
+  optional int32 book_id = 1; // Primary key for the book
+  string title = 2; // Title of the book
+  string author = 3; // Author of the book
+  string publisher = 4; // Publisher of the book
+  string isbn_no = 5; // ISBN number of the book
+  string publishing_year = 6; // Year of publication
+  int32 no_of_pages = 7; // Number of pages in the book
+  string pdf_url = 8; // URL of the book's PDF
+  string cover_image_url = 9; // URL of the book's cover image
+  int32 version = 10; // Version of the book
+  optional int32 subject_id = 11; // Foreign key referencing subject.subject_id
+  optional int32 class_id = 12; // Foreign key referencing class.class_id
+  optional int32 board_id = 13; // Foreign key referencing board.board_id
+  optional int32 teach_medium_id = 14; // Foreign key referencing teach_medium.teach_medium_id
+  google.protobuf.Timestamp created_on = 15; // Creation timestamp
+  optional int64 created_by = 16; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 17; // Last modification timestamp
+  optional int64 modified_by = 18; // User who last modified the entry
+}
+
+
+// Define CodeEnum
+
+
+message APIResponse {
+  enum StatusEnum {
+    STATUS_UNDEFINED = 0;
+    STATUS_SUCCESS = 1;
+    STATUS_IN_PROGRESS = 2;
+    STATUS_NOT_FOUND = 3;
+    STATUS_FORBIDDEN = 4;
+    STATUS_UNAUTHORIZED = 5;
+    STATUS_BAD_REQUEST = 6;
+    STATUS_INTERNAL_ERROR = 7;
+    STATUS_MAINTENANCE = 8;
+    STATUS_FAILURE = 9;
+    STATUS_ERROR = 10;
+  }
+
+  enum CodeEnum {
+    UNDEFINED = 0;
+    OK = 200;
+    CREATED = 201;
+    NO_CONTENT = 204;
+    BAD_REQUEST = 400;
+    UNAUTHORIZED = 401;
+    FORBIDDEN = 403;
+    NOT_FOUND = 404;
+    INTERNAL_SERVER_ERROR = 500;
+    SERVICE_UNAVAILABLE = 503;
+
+    //CUSTOM for resource
+    RESOURCE_ACCESS_GRANTED = 220; // Access to resource granted
+    RESOURCE_ACCESS_DENIED = 221; // Access to resource denied
+    RESOURCE_ACCESS_NOT_YET_AVAILABLE = 222; // Access to resource not yet available
+    RESOURCE_NOT_FOUND = 223;
+  }
+  StatusEnum status = 1;
+  CodeEnum code = 2;
+  string message = 3;
+  google.protobuf.Any data = 4;
+}

@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package geneo.lms.teacher.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "content_management/content.common.apis.proto";
+import "common/common.db.proto";
+import "learning_management/lms.lesson.common.apis.proto";
+
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Test Project - 2.0/_git/apis";
+    description: "gRPC gateway";
+  }
+  schemes: HTTPS;
+};
+
+
+service LmsTeacherAPIServiceV1 {
+  rpc fetchTeacherBanners (FetchTeacherBannersRequest) returns (FetchTeacherBannersResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.teacher.apis.LmsTeacherAPIServiceV1/fetchTeacherBanners"
+        body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Banners"
+      description: "Lists all banners for a teacher."
+      tags: "Banners"
+    };
+  }
+}
+
+message FetchTeacherBannersRequest {
+  int64 teacher_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message FetchTeacherBannersResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated Banner banners = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+message Banner {
+  // Add banner fields here.
+  int32 banner_id = 1;
+  optional string imageUrl = 2;
+  string title = 3;
+  optional string deeplink_url = 4;
+  bool isActive = 5;
+  int32 class_id = 6;
+  string class = 7;
+  optional int32 section_id = 8;
+  optional string section = 9;
+  optional int32 subject_id = 10;
+  optional string subject = 11;
+  float score_percent = 12;
+}

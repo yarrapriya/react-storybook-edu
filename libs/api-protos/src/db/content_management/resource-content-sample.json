@@ -1,0 +1,211 @@
+{
+  "1":  [
+    [
+      {
+          "type": "passage",
+          "title": "Solubility of Solids.",
+          "content": [
+              {
+                  "textLeft": "Some solids dissolve in liquids and form a <b>solution</b>."
+              },
+              {
+                  "image": "g4.s.solids-liquids-gases-e2.sc1_cbse/img/salt-569ce4b4e3-450x331.mp4"
+              },
+              {
+                  "textLeft": "For example, when salt is added to water, it breaks up into <b>molecules</b> and spreads into the space between water molecules, forming a solution.<br><br>Any solid matter that dissolves in liquid is called a <b><font color=\"#e80000\">solute</font></b> while the liquid in which it dissolves is called  <b><font color=\"#348ffa\">solvent </font></b>.<br><br>The resulting mixture (solute + solvent) is known as a <b><font color=\"#ffa500\">solution</font></b>."
+              },
+              {
+                  "textLeft": "But when we add chalk powder into water, it does not dissolve."
+              },
+              {
+                  "image": "g4.s.solids-liquids-gases-e2.sc1_cbse/img/chalk-in-water-dd7e52ba52-450x219.jpg"
+              },
+              {
+                  "textLeft": "This indicates that chalk is a water insoluble substance."
+              },
+              {
+                  "subHeading": "Solubility of Liquids."
+              },
+              {
+                  "textLeft": "Some liquids which mix with each other are called <b>miscible liquids</b>."
+              },
+              {
+                  "image": "g4.s.solids-liquids-gases-e2.sc1_cbse/img/coffee-milk-3cbebc0ed8-450x300.mp4"
+              },
+              {
+                  "textLeft": "For example, when milk is added to coffee decoction (coffee boiled in water), it easily mixes with it.<br><br>Thus, milk is miscible with water."
+              },
+              {
+                  "textLeft": "While liquids which do not mix with each other are called <b><font color=\"#ffcd02\">immiscible liquids</font></b>."
+              },
+              {
+                  "image": "g4.s.solids-liquids-gases-e2.sc1_cbse/img/oil-water-846500591d-450x253.mp4"
+              },
+              {
+                  "textLeft": "For example, when oil is added to water, it forms a separate layer as oil is lighter than water and does not mix with it."
+              },
+              {
+                  "subHeading": "Solubility of Gases."
+              },
+              {
+                  "textLeft": "Some gases dissolve in water or can be dissolved under pressure."
+              },
+              {
+                  "image": "g4.s.solids-liquids-gases-e2.sc1_cbse/img/sea-animals-29183a6551-450x253.mp4"
+              },
+              {
+                  "textLeft": "Aquatic animals breathe in <b><font color=\"#348ffa\">oxygen</font></b> dissolved in water."
+              },
+              {
+                  "image": "g4.s.solids-liquids-gases-e2.sc1_cbse/img/coca-cola-2da4eeefbb-450x252.mp4"
+              },
+              {
+                  "textLeft": "Aerated cold drinks contain <b>carbon dioxide</b> dissolved under pressure.<br><br>When cold drink is poured out, this gas fizzes out in the form of bubbles."
+              }
+          ],
+          "contentMeta": {
+              "topics": [
+                  "Solids, Liquids and Gases"
+              ],
+              "subTopics": [
+                  "Solubility of Solids, Liquids and Gases"
+              ]
+          },
+          "version": 3,
+          "meta": {
+              "created": "2020-04-06T03:46:49.455Z",
+              "modified": "2022-09-12T16:13:53.465Z"
+          },
+          "id": "6e443354b010dd84713b9f052c8d190a"
+      },
+      {
+          "type": "fib",
+          "content": {
+              "marks": [
+                  2
+              ],
+              "elements": [
+                  {
+                      "text": "<b><font color=\"#ffcd02\">Lemonade</font></b> is a refreshing drink, which is liked by most of the people."
+                  },
+                  {
+                      "text": "For making lemonade, lemon juice is added to water."
+                  },
+                  {
+                      "image": "g4.s.solids-liquids-gases-e2.sc1_cbse/img/lime-in-water-5844123d45-450x253.mp4"
+                  },
+                  {
+                      "text": "On adding to water, lemon juice easily mixes with it."
+                  },
+                  {
+                      "text": "Thus, lemon juice is a ____ liquid."
+                  }
+              ],
+              "time": 45,
+              "correct": [
+                  [
+                      "miscible"
+                  ]
+              ]
+          },
+          "contentMeta": {
+              "topics": [
+                  "Solids, Liquids and Gases"
+              ],
+              "subTopics": [
+                  "Solubility of Solids, Liquids and Gases"
+              ]
+          },
+          "version": 3,
+          "meta": {
+              "created": "2020-04-06T03:46:49.455Z",
+              "modified": "2022-09-12T16:13:53.466Z"
+          },
+          "id": "9869223b74cb69b7661497547b38f07d"
+      },
+      {
+          "type": "mcq_s",
+          "content": {
+              "marks": [
+                  2
+              ],
+              "elements": [
+                  {
+                      "text": "When <b><font color=\"#bb671c\">sand</font></b> is added to water and stirred, it settles at the bottom and does not mixes with it."
+                  },
+                  {
+                      "image": "g4.s.solids-liquids-gases-e2.sc1_cbse/img/sand-water-5dcd44ceca-450x298.jpg"
+                  },
+                  {
+                      "text": "This indicates that this sand is:"
+                  }
+              ],
+              "time": 35,
+              "correct": "2",
+              "options": [
+                  {
+                      "text": "water soluble substance."
+                  },
+                  {
+                      "text": "water insoluble substance."
+                  }
+              ]
+          },
+          "contentMeta": {
+              "topics": [
+                  "Solids, Liquids and Gases"
+              ],
+              "subTopics": [
+                  "Solubility of Solids, Liquids and Gases"
+              ]
+          },
+          "version": 3,
+          "meta": {
+              "created": "2020-04-06T03:46:49.455Z",
+              "modified": "2022-09-12T16:13:53.465Z"
+          },
+          "id": "c686ada12305e48c5d18f2562f47f1f9"
+      },
+      {
+          "title": "title",
+          "type": "instructions",
+          "content": {
+              "1": [
+                  {
+                      "note": "This video shows how pleasingly <b><font color=\"#ffa500\">ink</font></b> mixes with <b><font color=\"#348ffa\">water</font></b>.<br><br>Use this video to introduce the concept of <b><font color=\"#348ffa\"><u>solubility</u></font></b>."
+                  },
+                  {
+                      "student-video": "g4.s.solids-liquids-gases-e2.sc1_cbse/video/ink-water-b1e7157f37-1280x720.mp4"
+                  },
+                  {
+                      "discuss": "In the video, we saw how beautifully liquid ink mixes with water."
+                  },
+                  {
+                      "ask": "<b>Do all solids, liquids and gases mix with water in a similar way?</b> <br> <u>Answer</u>: No."
+                  },
+                  {
+                      "discuss": "Ink mixes with water because it is a miscible liquid.<br><br>Let us find out solubility of different solids, liquids and gases in water in the following passage."
+                  },
+                  {
+                      "next": ""
+                  }
+              ]
+          },
+          "contentMeta": {
+              "topics": [
+                  "Solids, Liquids and Gases"
+              ],
+              "subTopics": [
+                  "Solubility of Solids, Liquids and Gases"
+              ]
+          },
+          "version": 3,
+          "meta": {
+              "created": "2020-04-06T03:46:49.455Z",
+              "modified": "2022-09-12T16:13:53.465Z"
+          },
+          "id": "fa8a950b772921b04ae5c62832eee2b5"
+      }
+  ]
+  ]
+}

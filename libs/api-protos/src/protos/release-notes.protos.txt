@@ -1,0 +1,3 @@
+1.0.0 (15 Jun 10:42PM)
+-- First version of db tables protos for revision-2 release-2 of geneo
+-- Response model is pending

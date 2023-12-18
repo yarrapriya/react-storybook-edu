@@ -1,0 +1,478 @@
+syntax = "proto3";
+
+package geneo.lms.db;
+
+option go_package = ".";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/field_behavior.proto";
+import "content_management/content.db.proto";
+import "common/common.db.proto";
+
+// Enum for taskEnum
+enum TaskEnum {
+  TASK_UNDEFINED = 0; // Represents an undefined task
+  TASK_HOMEWORK_AUTOMATED = 1; // Represents an automated homework task
+  TASK_HOMEWORK_CUSTOM = 2; // Represents a custom homework task
+  TASK_ASSESSMENT_AUTOMATED = 3; // Represents an automated assessment task
+  TASK_ASSESSMENT_CUSTOM = 4; // Represents a custom assessment task
+}
+
+// Enum for taskActionEnum
+enum TaskActionEnum {
+  TASK_ACTION_UNDEFINED = 0; // Represents an undefined action
+  TASK_ACTION_READ = 1; // Represents a read action
+  TASK_ACTION_WRITE = 2; // Represents a write action
+  TASK_ACTION_WATCH_VIDEO = 3; // Represents a watch video action
+  TASK_ACTION_FIB = 4; // Represents a fill in the blank action
+  TASK_ACTION_MTF = 5; // Represents a match the following action
+  TASK_ACTION_ACTIVITY = 6; // Represents an activity action
+  TASK_ACTION_ACTIVITY_QUESTION = 7; // Represents an activity question action
+  TASK_ACTION_MCQ_S = 8; // Represents a single-choice multiple-choice question action
+  TASK_ACTION_MCQ_M = 9; // Represents a multiple-choice multiple-choice question action
+  TASK_ACTION_TF = 10; // Represents a true or false question action
+  TASK_ACTION_SHORT = 11; // Represents a short answer question action
+  TASK_ACTION_LONG = 12; // Represents a long answer question action
+}
+
+// Enum for taskCreationStatusEnum
+enum TaskCreationStatusEnum {
+  TASK_CREATION_STATUS_UNDEFINED = 0; // Represents an undefined task creation status
+  TASK_CREATION_STATUS_INITIALIZED = 1; // Represents an initialized task
+  TASK_CREATION_STATUS_DRAFT = 2; // Represents a draft task
+  TASK_CREATION_STATUS_APPROVED = 3; // Represents an approved task
+  TASK_CREATION_STATUS_DUPLICATED = 4; // Represents a duplicated task
+}
+
+// Enum for taskGroupStatusEnum
+enum TaskGroupStatusEnum {
+  TASK_GROUP_STATUS_UNDEFINED = 0; // Represents an undefined task group status
+  TASK_GROUP_STATUS_ASSIGNED = 1; // Represents an assigned task group
+  TASK_GROUP_STATUS_CANCELLED = 2; // Represents a cancelled task group
+  TASK_GROUP_STATUS_COMPLETED = 3; // Represents a completed task group
+}
+
+// Enum for taskEvaluationEnum
+enum TaskEvaluationStatusEnum {
+  TASK_EVALUATION_STATUS_UNDEFINED = 0; // Represents an undefined task evaluation status
+  TASK_EVALUATION_STATUS_NOT_STARTED = 1; // Represents a task evaluation not started
+  TASK_EVALUATION_STATUS_IN_PROGRESS = 2; // Represents a task evaluation in progress
+  TASK_EVALUATION_STATUS_COMPLETED = 3; // Represents a task evaluation completed
+}
+
+// Enum for taskStudentStatusEnum
+enum TaskStudentAttemptStatusEnum {
+  TASK_STUDENT_STATUS_UNDEFINED = 0; // Represents an undefined task student status
+  TASK_STUDENT_STATUS_PENDING = 1; // Represents an assigned task student status
+  TASK_STUDENT_STATUS_IN_PROGRESS = 2; // Represents a task in progress student status
+  TASK_STUDENT_STATUS_COMPLETED = 3; // Represents a completed task student status
+  TASK_STUDENT_STATUS_EXITED = 4; // Represents a exited task student status
+}
+
+
+// Enum for TaskActiveStatusEnum
+enum TaskActiveStatusEnum {
+  TASK_ACTIVE_STATUS_UNDEFINED = 0; // Represents an undefined task active status
+  TASK_ACTIVE_STATUS_ACTIVE = 1; // Represents an active task status
+  TASK_ACTIVE_STATUS_INACTIVE = 2; // Represents an inactive task status
+  TASK_ACTIVE_STATUS_SUSPENDED = 3; // Represents a suspended task status
+  TASK_ACTIVE_STATUS_CANCELLED = 4; // Represents a cancelled task status
+}
+
+// Enum for SessionModeEnum
+enum SessionModeEnum {
+  SESSION_MODE_UNDEFINED = 0; // Represents an undefined session mode
+  SESSION_MODE_LEARN = 1; // Represents a session mode of lesson
+  SESSION_MODE_TEACH = 2; // Represents a session mode of learn
+  SESSION_MODE_RESOURCE = 3; // Represents a session mode of assessment
+  SESSION_MODE_LESSON_RESOURCE = 4; // Represents a session mode of revise
+}
+
+// Enum for SessionStatusEnum
+enum SessionStatusEnum {
+  SESSION_STATUS_UNDEFINED = 0; // Represents an undefined session status
+  SESSION_STATUS_STARTED = 1; // Represents an ongoing session status
+  SESSION_STATUS_ONGOING = 2; // Represents an ongoing session status
+  SESSION_STATUS_EXITED = 3; // Represents an exited session status
+  SESSION_STATUS_COMPLETED = 4; // Represents a completed session status
+}
+
+// Enum for PersonEnum
+enum PersonEnum {
+  PERSON_TYPE_UNDEFINED = 0; // Represents an undefined person type
+  PERSON_TYPE_STUDENT = 1; // Represents a person type of student
+  PERSON_TYPE_TEACHER = 2; // Represents a person type of teacher
+  PERSON_TYPE_PARENT = 3; // Represents a person type of parent
+  PERSON_TYPE_ADMIN = 4; // Represents a person type of admin
+}
+
+// Enum for SessionModeEnum
+enum HomeworkSessionModeEnum {
+  HOMEWORK_SESSION_MODE_UNDEFINED = 0; // Represents an undefined session mode
+  HOMEWORK_SESSION_MODE_FIRST_ATTEMPT = 1; // Represents a session mode of lesson
+  HOMEWORK_SESSION_MODE_REATTEMPT = 2; // Represents a session mode of learn
+  HOMEWORK_SESSION_MODE_RESUME = 3; // Represents a session mode of assessment
+}
+
+message TaskQuestionInfo {
+  optional string parent_task_id = 1; // Parent Task ID
+  optional string question_task_id = 2; // Question Task ID
+  optional string question_id = 3; // Question ID
+  geneo.content.db.Question.QuestionEnum question_type = 4;
+  int32 sequence = 5; // Sequence number
+  float estimated_time_in_min = 6;
+}
+
+message TaskInfo {
+    optional int32 homework_id = 1; // Homework ID
+    repeated string question_ids = 2;
+    repeated TaskQuestionInfo task_question_info = 3;
+}
+
+// Message for student_group table
+message StudentGroup {
+  optional int32 student_group_id = 1; // Primary key for student_group
+  string group_name = 2; // Group name
+  optional int32 school_class_section_id = 3; // Foreign key referencing school_management.school_teacher_class_course (school_teacher_class_course_id)
+  repeated int64 student_ids = 4; // Array of student user IDs
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+}
+
+// Message for task_default_instructions table
+message TaskDefaultInstructions {
+  optional int32 id = 1; // Primary key for task_default_instructions
+  optional string task_instruction_id = 2; // Referencing key for task_default_instructions
+  string task_type = 3; // Type of task (enum: task_type_enum)
+  repeated string instructions = 4; // Default instructions for the task
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+}
+
+// Message for task table
+message Task {
+  optional int32 id = 1; // Primary key for task
+  optional string task_id = 2; //
+  optional string generic_homework_id = 3;
+  optional int64 teacher_id = 4; // Teacher's user ID
+  string task_title = 5; // Name of the task
+  optional TaskEnum task_type = 6; // Type of task (enum: task_type_enum)
+  optional TaskActionEnum task_action_type = 7; // Action type of the task (enum: task_action_type_enum)
+  optional string parent_task_id = 8; // Parent task ID (foreign key referencing task.task_id)
+  optional string root_task_id = 9; // Root task ID
+  optional int32 course_id = 10; // Course ID
+  optional int32 module_id = 11; // Course module ID
+  optional int32 level = 12; // Task level
+  int32 position = 13; //Position of the task
+  string description = 14; // Task description
+  repeated string instructions = 15; // Task instructions
+  geneo.content.db.DifficultyLevelEnum difficulty_level = 16; // Task difficulty level
+  optional int32 duplicate_task_source_id = 17; // Source ID for duplicated tasks
+  int32 num_assigned = 18; // Number of times task assigned
+  TaskInfo data = 19; // Task data in JSONB format
+  TaskCreationStatusEnum task_creation_status = 20; // Task creation status (enum: task_creation_status_enum)
+  google.protobuf.Timestamp created_on = 21; // Creation timestamp
+  optional int64 created_by = 22; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 23; // Last modification timestamp
+  optional int64 modified_by = 24; // User who last modified the entry
+  string poster_image_url = 25;
+  TaskActiveStatusEnum task_active_status = 26;
+  optional int32 school_class_section_id = 27;
+  optional google.protobuf.Timestamp deleted_at = 28;
+}
+
+message AverageMetricsModel {
+  int32 no_of_submissions = 1;
+  float avg_score = 2;
+}
+
+// Message for task_group_assignment table
+message TaskGroupAssignment {
+  optional int32 task_group_assignment_id = 1; // Primary key for task_group_assignment
+  optional string task_id = 2; // Foreign key referencing task.task_id
+  optional string parent_task_id = 19;
+  optional int32 student_group_id = 3; // Student group ID (foreign key referencing student_group.student_group_id)
+  int32 num_students = 4; // Number of students in the group
+  google.protobuf.Timestamp task_assigned_date = 5; // Date when the task was assigned
+  google.protobuf.Timestamp task_commence_date = 6; // Date when the task commenced
+  google.protobuf.Timestamp task_target_date = 7; // Target date for task completion
+  google.protobuf.Timestamp task_completed_date = 8; // Date when the task was completed
+  google.protobuf.Timestamp task_cancellation_date = 9; // Task cancellation date in JSONB format
+  TaskGroupStatusEnum task_group_status = 10; // Task status (enum: task_group_status_enum)
+  AverageMetricsModel avg_metrics = 11; // Average metrics in JSONB format
+  int32 num_completions = 12; // Number of completions for the task
+  google.protobuf.Timestamp created_on = 13; // Creation timestamp
+  optional int64 created_by = 14; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 15; // Last modification timestamp
+  optional int64 modified_by = 16; // User who last modified the entry
+  optional google.protobuf.Timestamp daily_reminder_time = 17;
+  optional bool allow_late_submission = 18;
+  optional google.protobuf.Timestamp deleted_at = 20;
+}
+
+message MetricsModel {
+  float response_score = 1;
+  float max_score = 2;
+  float time_spent_in_sec = 3;
+  int32 total_questions = 4;
+  int32 correct_count = 5;
+}
+
+message TaskTeacherReview {
+
+}
+
+// Message for task_student_assignment table
+message TaskStudentAssignment {
+  optional int32 task_student_assignment_id = 1; // Primary key for task_student_assignment
+  optional string task_id = 2; // Foreign key referencing task.task_id
+  optional string parent_task_id = 20;
+  optional int64 student_id = 3; // Student's user ID
+  optional int32 student_group_id = 4; // Student group ID (foreign key referencing student_group.student_group_id)
+  google.protobuf.Timestamp task_assigned_date = 5; // Date when the task was assigned to the student
+  google.protobuf.Timestamp task_target_date = 6; // Target date for task completion by the student
+  google.protobuf.Timestamp task_commence_date = 7; // Date when the student commenced the task
+  google.protobuf.Timestamp task_completed_date = 8; // Date when the student completed the task
+  TaskStudentAttemptStatusEnum task_student_status = 9; // Task status for the student (enum: task_student_status_enum)
+  TaskEvaluationStatusEnum task_evaluation_status = 10; // Task evaluation status for the student (enum: task_evaluation_enum)
+  MetricsModel metrics = 11; // Metrics related to the student's task performance in JSONB format
+  repeated StudentTaskResponse response = 12; // Student's response to the task in JSONB format
+  TaskTeacherReview teacher_review = 13; // Teacher's review of the student's task in JSONB format
+  google.protobuf.Timestamp created_on = 14; // Creation timestamp
+  optional int64 created_by = 15; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 16; // Last modification timestamp
+  optional int64 modified_by = 17; // User who last modified the entry
+  optional google.protobuf.Timestamp daily_reminder_time = 18;
+  optional bool allow_late_submission = 19;
+  optional google.protobuf.Timestamp deleted_at = 21;
+}
+
+
+message StudentHomeworkSession {
+  int32 student_homework_session_id = 1 [(google.api.field_behavior) = REQUIRED];
+  int32 student_task_assignment_id = 12;
+  int32 homework_id = 2 [(google.api.field_behavior) = REQUIRED];
+  int64 student_id = 3 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp start_time = 4;
+  google.protobuf.Timestamp end_time = 5;
+  TaskStudentAttemptStatusEnum session_status = 6; // Task status for the student (enum: task_student_status_enum)
+  HomeworkSessionModeEnum session_mode = 7;
+  repeated StudentTaskResponse responses = 8;
+  MetricsModel metrics = 9; // Metrics associated with the lesson session. Nullable field.
+  int32 session_number = 10;
+  optional int32 previous_student_homework_session_id = 11;
+}
+
+message ContentAttempt {
+  google.protobuf.Timestamp start_time = 1 [(google.api.field_behavior) = OPTIONAL];
+  optional google.protobuf.Timestamp end_time = 2 [(google.api.field_behavior) = OPTIONAL];
+  repeated string answer = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+enum QAttemptResultEnum {
+   RESPONSE_UNDEFINED = 0;
+   RESPONSE_CORRECT = 1;
+   RESPONSE_INCORRECT = 2;
+   RESPONSE_PARTIALLY_CORRECT = 3;
+}
+
+message StudentTaskResponse {
+  optional int32 homework_id = 1 [(google.api.field_behavior) = OPTIONAL];
+  optional string question_id = 2 [(google.api.field_behavior) = REQUIRED];
+  optional string question_task_id = 3 [(google.api.field_behavior) = OPTIONAL];
+  repeated ContentAttempt responses = 4 [(google.api.field_behavior) = REQUIRED];
+  optional QAttemptResultEnum is_correct = 5 [(google.api.field_behavior) = OPTIONAL];
+  float max_score = 6;
+  float response_score = 7;
+  float expectedTimeInSec = 8;
+  float timeTakenInSec = 9;
+  int32 session_id = 10;
+}
+
+message StudentContentResponse {
+  optional string content_id = 1 [(google.api.field_behavior) = REQUIRED];
+  repeated ContentAttempt responses = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message TeacherContentResponse {
+  optional string content_id = 1 [(google.api.field_behavior) = REQUIRED];
+  repeated ContentAttempt responses = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// StudentLessonSessionMetrics represents the metrics for a student's lesson session.
+message StudentLessonSessionMetrics {
+  optional int32 student_lesson_session_id = 1; // Unique identifier for the student's lesson session.
+  bool is_complete = 2; // Indicates if the lesson session is complete or not. Optional field.
+  float response_score = 3;
+  float max_score = 4;
+  repeated string completed_resource_ids = 5; // List of resource IDs that have been completed by the student.
+  repeated VisitedResourceContentInfoList visited_resource_content_info_list = 6; // List of visited resource content information.
+}
+
+// StudentLessonSessionMetrics represents the metrics for a student's lesson session.
+message TeacherLessonSessionMetrics {
+  optional int32 teacher_lesson_session_id = 1; // Unique identifier for the student's lesson session.
+  bool is_complete = 2; // Indicates if the lesson session is complete or not. Optional field.
+  repeated string completed_resource_ids = 3; // List of resource IDs that have been completed by the student.
+  repeated VisitedResourceContentInfoList visited_resource_content_info_list = 4; // List of visited resource content information.
+  float response_score =5;
+  float max_score =6;
+}
+
+// VisitedResourceContentInfoList represents the information about visited resource content.
+message VisitedResourceContentInfoList {
+  optional string resource_id = 1; // Identifier for the visited resource.
+  int32 page_no = 2; // Optional field indicating the page number of the visited resource.
+  repeated string page_content_ids = 3;
+}
+
+// StudentLessonSession represents a lesson session for a student.
+message StudentLessonSession {
+  optional int32 student_lesson_session_id = 1; // Unique identifier for the student's lesson session.
+  optional int64 student_id = 2; // ID of the student associated with the lesson session.
+  optional string lesson_id = 3; // ID of the lesson associated with the session.
+  optional int32 school_id = 4; // ID of the school where the lesson session takes place.
+  int32 academic_year = 5; // Academic year associated with the lesson session.
+  geneo.common.db.Class.ClassEnum class = 6; // Grade of the student.
+  string section = 7; // Section of the student.
+  geneo.common.db.Subject.SubjectEnum subject = 8; // Subject of the lesson session.
+  SessionModeEnum session_mode = 9; // Mode of the lesson session (e.g., online, offline, etc.).
+  SessionStatusEnum session_status = 10; // Status of the lesson session (e.g., in progress, completed, etc.).
+  optional int32 teacher_lesson_session_id = 11; // ID of the teacher's lesson session. Nullable field.
+  repeated string session_resource_ids = 12; // List of resource IDs associated with the session.
+  google.protobuf.Timestamp start_time = 13; // Start time of the lesson session.
+  google.protobuf.Timestamp end_time = 14; // End time of the lesson session. Nullable field.
+  StudentLessonSessionMetrics metrics = 15; // Metrics associated with the lesson session. Nullable field.
+  google.protobuf.Timestamp created_on = 16; // Timestamp when the session was created. Nullable field.
+  optional int64 created_by = 17; // ID of the user who created the session. Nullable field.
+  optional google.protobuf.Timestamp modified_on = 18; // Timestamp when the session was last modified. Nullable field.
+  optional int64 modified_by = 19; // ID of the user who last modified the session. Nullable field.
+}
+
+// TeacherLessonSession represents a lesson session for a teacher.
+message TeacherLessonSession {
+  optional int32 teacher_lesson_session_id = 1; // Unique identifier for the teacher's lesson session.
+  optional int64 teacher_id = 2; // ID of the teacher associated with the lesson session.
+  optional string lesson_id = 3; // ID of the lesson associated with the session.
+  optional int32 school_id = 4; // ID of the school where the lesson session takes place.
+  int32 academic_year = 5; // Academic year associated with the lesson session.
+  geneo.common.db.Class.ClassEnum class = 6; // Grade associated with the lesson session.
+  string section = 7; // Section associated with the lesson session.
+  geneo.common.db.Subject.SubjectEnum subject = 8; // Subject associated with the lesson session.
+  SessionModeEnum session_mode = 9; // Mode of the lesson session (e.g., online, offline, etc.).
+  SessionStatusEnum session_status = 10; // Status of the lesson session (e.g., in progress, completed, etc.).
+  repeated string session_resource_ids = 11; // List of resource IDs associated with the session.
+  google.protobuf.Timestamp start_time = 12; // Start time of the lesson session.
+  google.protobuf.Timestamp end_time = 13; // End time of the lesson session. Nullable field.
+  TeacherLessonSessionMetrics metrics = 14; // Metrics associated with the lesson session. Nullable field.
+  google.protobuf.Timestamp created_on = 15; // Timestamp when the session was created. Nullable field.
+  optional int64 created_by = 16; // ID of the user who created the session. Nullable field.
+  optional google.protobuf.Timestamp modified_on = 17; // Timestamp when the session was last modified. Nullable field.
+  optional int64 modified_by = 18; // ID of the user who last modified the session. Nullable field.
+}
+
+// StudentLessonSessionMetrics represents the metrics for a student's lesson session.
+message StudentResourceSessionMetrics {
+  optional int32 student_resource_session_id = 1; // Unique identifier for the student's lesson session.
+  bool is_complete = 2; // Indicates if the lesson session is complete or not. Optional field.
+  float response_score =3;
+  float max_score =4;
+  repeated int32 completed_pages = 5; // List of resource IDs that have been completed by the student.
+  repeated VisitedResourceContentInfoList visited_resource_content_info_list = 6; // List of visited resource content information.
+}
+
+// StudentResourceSessionMetrics represents the metrics for a student's lesson session.
+message TeacherResourceSessionMetrics {
+  optional int32 teacher_resource_session_id = 1; // Unique identifier for the student's lesson session.
+  bool is_complete = 2; // Indicates if the lesson session is complete or not. Optional field.
+  float response_score =3;
+  float max_score =4;
+  repeated int32 completed_pages = 5; // List of resource IDs that have been completed by the student.
+  repeated VisitedResourceContentInfoList visited_resource_content_info_list = 6; // List of visited resource content information.
+}
+
+// StudentResourceSession represents a resource session for a student.
+message StudentResourceSession {
+  optional int32 student_resource_session_id = 1; // Unique identifier for the student's resource session.
+  optional int64 student_id = 2; // ID of the student associated with the resource session.
+  optional string resource_id = 3; // ID of the resource associated with the session.
+  optional int32 school_id = 4; // ID of the school where the lesson session takes place.
+  int32 academic_year = 5; // Academic year associated with the lesson session.
+  geneo.common.db.Class.ClassEnum class = 6; // Grade associated with the lesson session.
+  string section = 7; // Section associated with the lesson session.
+  optional int32 module_id = 8; // Subject associated with the lesson session.
+  optional geneo.common.db.Subject.SubjectEnum subject = 9; // Subject associated with the lesson session.
+  int32 resource_content_version = 10; // Resource version at the time of the session.
+  optional int32 student_lesson_session_id = 11; // ID of the user's lesson session. Nullable field.
+  geneo.lms.db.SessionModeEnum session_mode = 12; // Mode of the resource session (e.g., online, offline, etc.).
+  geneo.lms.db.SessionStatusEnum session_status = 13; // Status of the resource session (e.g., in progress, completed, etc.).
+  google.protobuf.Timestamp start_time = 14; // Start time of the resource session.
+  google.protobuf.Timestamp end_time = 15; // End time of the resource session. Nullable field.
+  repeated StudentContentResponse response = 16; // Response associated with the resource session (e.g., ResourceResponseModel).
+  StudentResourceSessionMetrics metrics = 17; // Metrics associated with the lesson session. Nullable field.
+}
+
+// TeacherResourceSession represents a resource session for a teacher.
+message TeacherResourceSession {
+  optional int32 teacher_resource_session_id = 1; // Unique identifier for the teacher's resource session.
+  optional int64 teacher_id = 2; // ID of the teacher associated with the resource session.
+  optional string resource_id = 3; // ID of the resource associated with the session.
+  optional int32 school_id = 4; // ID of the school where the lesson session takes place.
+  int32 academic_year = 5; // Academic year associated with the lesson session.
+  geneo.common.db.Class.ClassEnum class = 6; // Grade associated with the lesson session.
+  string section = 7; // Section associated with the lesson session.
+  geneo.common.db.Subject.SubjectEnum subject = 8; // Subject associated with the lesson session.
+  optional int32 module_id = 9; // Subject associated with the lesson session.
+  int32 resource_content_version = 10; // Resource version at the time of the session.
+  optional int32 teacher_lesson_session_id = 11; // ID of the user's lesson session. Nullable field.
+  geneo.lms.db.SessionModeEnum session_mode = 12; // Mode of the resource session (e.g., online, offline, etc.).
+  geneo.lms.db.SessionStatusEnum session_status = 13; // Status of the resource session (e.g., in progress, completed, etc.).
+  google.protobuf.Timestamp start_time = 14; // Start time of the resource session.
+  google.protobuf.Timestamp end_time = 15; // End time of the resource session. Nullable field.
+  repeated TeacherContentResponse response = 16; // Response associated with the resource session (e.g., ResourceResponseModel).
+  TeacherResourceSessionMetrics metrics = 17; // Metrics associated with the lesson session. Nullable field.
+}
+
+message StudentModuleAnalytics {
+  int32 student_module_analytics_id = 1 ;
+  int64 student_id = 2 ;
+  int32 course_id = 3 ;
+  int32 module_id = 4 ;
+  float score = 5 ;
+  int32 no_of_hw_completed = 6 ;
+  float time_spent_in_min = 7 ;
+  google.protobuf.Timestamp expiry_timestamp = 8 ;
+  google.protobuf.Timestamp last_updated_time = 9 ;
+  google.protobuf.Timestamp created_on = 10; // Timestamp when the session was created. Nullable field.
+  optional int64 created_by = 11; // ID of the user who created the session. Nullable field.
+  optional google.protobuf.Timestamp modified_on = 12; // Timestamp when the session was last modified. Nullable field.
+  optional int64 modified_by = 13; // ID of the user who last modified the session. Nullable field.
+  int32 version = 14;
+  int32 level = 15; //0 -> book, 1 -> chapter, 2 -> topic
+}
+
+
+message TeacherModuleAnalytics {
+  int32 teacher_module_analytics_id = 1 ;
+  int64 teacher_id = 2 ;
+  int32 school_class_section_id = 3 ;
+  int32 course_id = 5 ;
+  int32 module_id = 4 ;
+  float score = 6 ;
+  int32 no_of_hw_assigned = 7 ;
+  int32 no_of_lesson_taughts = 8 ;
+  float time_spent_in_min = 9 ;
+  google.protobuf.Timestamp expiry_timestamp = 10 ;
+  google.protobuf.Timestamp last_updated_time = 11 ;
+  google.protobuf.Timestamp created_on = 12; // Timestamp when the session was created. Nullable field.
+  optional int64 created_by = 13; // ID of the user who created the session. Nullable field.
+  optional google.protobuf.Timestamp modified_on = 14; // Timestamp when the session was last modified. Nullable field.
+  optional int64 modified_by = 15; // ID of the user who last modified the session. Nullable field.
+  int32 version = 16;
+  int32 level = 17; //0 -> book, 1 -> chapter, 2 -> topic
+}
+

@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package geneo.lms.book.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "content_management/content.db.proto";
+import "common/common.db.proto";
+import "content_management/content.common.apis.proto";
+import "user_management/ums.db.proto";
+import "google/api/field_behavior.proto";
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Test Project - 2.0/_git/apis";
+    description: "gRPC gateway";
+  }
+  schemes: HTTPS;
+};
+
+service LmsBookAPIServiceV1 {
+  rpc fetchClassBooks (FetchClassBooksRequest) returns (FetchClassBooksResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.book.apis.LmsBookAPIServiceV1/fetchClassBooks",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Grade Books Info"
+      description: "Fetches books for a specific grade and subject."
+      tags: "Grade-Books"
+    };
+  }
+
+  rpc fetchBookContent (FetchBookContentRequest) returns (FetchBookContentResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.book.apis.LmsBookAPIServiceV1/fetchBookContent",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Book Content"
+      description: "Fetches books for a specific grade and subject."
+      tags: "FetchBookContent"
+    };
+  }
+
+}
+
+message FetchClassBooksRequest {
+  int64 person_id = 1 [(google.api.field_behavior) = REQUIRED];;
+  geneo.ums.db.ProfileRolesEnum person_type = 2[(google.api.field_behavior) = REQUIRED];;
+  optional int32 class_id = 3[(google.api.field_behavior) = OPTIONAL];;
+}
+
+message FetchClassBooksResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  BooksInfo data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message BooksInfo {
+  repeated Book books = 1;
+}
+
+message FetchBookContentRequest {
+  int64 person_id = 1;
+  geneo.ums.db.ProfileRolesEnum person_type = 2;
+  int32 book_id = 3;
+}
+
+message FetchBookContentResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  BookContentInfo data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message BookContentInfo {
+  repeated BookChaptersInfo book_chapters_info = 1;
+  repeated BookTopicsInfo book_topics_info = 2;
+}
+
+message BookChaptersInfo {
+  geneo.content.db.ModuleBookContent book_chapter_content_info = 1;
+  int32 book_id = 2;
+  int32 chapter_id = 3;
+  string title = 4;
+  int32 rank = 5;
+}
+
+message BookTopicsInfo {
+  geneo.content.db.ModuleBookContent book_topic_content_info = 1;
+  int32 book_id = 2;
+  int32 chapter_id = 3;
+  int32 topic_id = 4;
+  string title = 5;
+  int32 rank = 6;
+}
+
+
+message Book {
+    int32 book_id = 1;
+    string name = 2;
+    int32 version = 3;
+    string publisher = 4;
+    geneo.common.db.Board.BoardEnum board = 7;
+    int32 classId = 6;
+    int32 subjectId = 5;
+    string teach_medium = 8;
+    string cover_image_url = 9;
+    geneo.content.db.PDFResource pdf = 10;
+}
+
+message BookInfo {
+
+}
+
+

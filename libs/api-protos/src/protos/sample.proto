@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package geneo.sample;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Test Project - 2.0/_git/apis";
+    description: "gRPC gateway";
+  }
+  schemes: HTTPS;
+};
+
+service SampleService {
+  rpc AddSample (SampleRequest) returns (SampleResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/addSample"
+      response_body: "sample"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Add a Sample"
+      description: "Add a sample to the server."
+      tags: "Samples"
+    };
+  }
+}
+
+message Sample {
+  uint32 id = 1;
+  string text = 2;
+}
+
+message SampleRequest {
+  string text = 1;
+}
+
+message SampleResponse {
+  Sample sample = 1;
+}

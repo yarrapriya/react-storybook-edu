@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package geneo.subscription.db;
+
+option go_package = ".";
+
+import "google/protobuf/timestamp.proto";
+
+// Enum for DiscountModeEnum
+enum DiscountModeEnum {
+  DISCOUNT_MODE_UNDEFINED = 0;
+  DISCOUNT_MODE_PERCENT = 1;
+  DISCOUNT_MODE_FLAT = 2;
+}
+
+// Enum for DiscountValidityModeEnum
+enum DiscountValidityModeEnum {
+  DISCOUNT_VALIDITY_MODE_UNDEFINED = 0;
+  DISCOUNT_VALIDITY_MODE_COUNT = 1;
+  DISCOUNT_VALIDITY_MODE_DATE = 2;
+}
+
+// Enum for PaymentModeEnum
+enum PaymentModeEnum {
+  PAYMENT_MODE_UNDEFINED = 0;
+  PAYMENT_MODE_CARD = 1;
+  PAYMENT_MODE_CHEQUE = 2;
+  PAYMENT_MODE_CASH = 3;
+  PAYMENT_MODE_UPI = 4;
+  PAYMENT_MODE_OTHERS = 5;
+}
+
+// Enum for PaymentByEnum
+enum PaymentByEnum {
+  PAYMENT_BY_UNDEFINED = 0;
+  PAYMENT_BY_RETAIL_USER = 1;
+  PAYMENT_BY_SCHOOL = 2;
+}
+
+// Enum for TransactionStatusEnum
+enum TransactionStatusEnum {
+  TRANSACTION_STATUS_UNDEFINED = 0;
+  TRANSACTION_STATUS_STARTED = 1;
+  TRANSACTION_STATUS_PENDING = 2;
+  TRANSACTION_STATUS_COMPLETED = 3;
+  TRANSACTION_STATUS_FAILED = 4;
+  TRANSACTION_STATUS_REFUNDED = 5;
+}
+
+// Table structure for discount
+message Discount {
+  optional int32 discount_id = 1; // Primary key for discount
+  string discount_title = 2; // Title of the discount
+  string discount_description = 3; // Description of the discount
+  string discount_code = 4; // Code of the discount
+  DiscountModeEnum discount_mode = 5; // Mode of the discount
+  float discount_value = 6; // Value of the discount
+  DiscountValidityModeEnum discount_validity_mode = 7; // Validity mode of the discount
+  int32 discount_validity_count = 8; // Validity count of the discount
+  google.protobuf.Timestamp discount_validity_start = 9; // Start date/time of the discount validity
+  google.protobuf.Timestamp discount_validity_end = 10; // End date/time of the discount validity
+  bool discount_active = 11; // Flag indicating if the discount is active
+  google.protobuf.Timestamp created_on = 12; // Creation timestamp
+  optional int64 created_by = 13; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 14; // Last modification timestamp
+  optional int64 modified_by = 15; // User who last modified the entry
+}
+
+message PaymentTransactionDetails {
+
+}
+
+// Table structure for paymentTransaction
+message PaymentTransaction {
+  optional int64 payment_transaction_id = 1; // Primary key for paymentTransaction
+  PaymentModeEnum payment_mode = 2; // Payment mode
+  PaymentByEnum payment_by = 3; // Payment by
+  optional int32 school_id = 4; // Foreign key referencing school.schoolId
+  google.protobuf.Timestamp subscription_valid_from = 5; // Valid from date/time of the subscription
+  google.protobuf.Timestamp subscription_valid_to = 6; // Valid to date/time of the subscription
+  PaymentTransactionDetails payment_transaction_details = 7; // Details of the payment transaction
+  string payment_transaction_ref = 8; // Reference of the payment transaction
+  float transaction_amount = 9; // Amount of the transaction
+  float tax_rate = 10; // Tax rate applied to the transaction
+  float tax_amount = 11; // Tax amount of the transaction
+  float exchange_rate = 12; // Exchange rate used in the transaction
+  float processing_fee_percentage = 13; // Percentage-based processing fee
+  float processing_fee_fixed = 14; // Fixed processing fee
+  float processing_fee_amount = 15; // Total processing fee amount
+  float transaction_paid_amount = 16; // Amount paid in the transaction
+  string transaction_currency = 17; // Currency used in the transaction
+  string target_currency = 18; // Target currency for conversion
+  TransactionStatusEnum transaction_status = 19; // Status of the transaction
+  string billing_address = 20; // Billing address
+  optional int32 discount_id = 21; // Foreign key referencing discount.discountId
+  google.protobuf.Timestamp created_on = 22; // Creation timestamp
+  optional int64 created_by = 23; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 24; // Last modification timestamp
+  optional int64 modified_by = 25; // User who last modified the entry
+}

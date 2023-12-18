@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package geneo.analysis.student.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "common/common.db.proto";
+
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "analysis apis";
+  }
+  schemes: HTTP;
+};
+
+service StudentAnalysisAPIServiceV1 {
+
+  rpc fetchOverAllAnalysisStats (FetchOverAllAnalysisStatsRequest) returns (FetchOverAllAnalysisStatsResponse) {
+    option (google.api.http) = {
+      post: "/geneo.analysis.student.apis.StudentAnalysisAPIServiceV1/fetchOverAllAnalysisStats"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all subject analysis for paticular student."
+      description: "List all the subject analysis with score for particular student."
+      tags: "Analysis"
+    };
+  }
+
+  rpc fetchSubjectAnalysisStats (FetchSubjectAnalysisStatsRequest) returns (FetchSubjectAnalysisStatsResponse) {
+    option (google.api.http) = {
+      post: "/geneo.analysis.student.apis.StudentAnalysisAPIServiceV1/fetchSubjectAnalysisStats"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Lists all chapter analysis for particular student for a specific subject."
+      description: "Lists all chapter analysis for particular student for a specific subject."
+      tags: "Analysis"
+    };
+  }
+
+  // rpc fetchChapterOverAllAnalysisStats (FetchChapterAnalysisStatsRequest) returns (FetchChapterAnalysisStatsResponse) {
+  //   option (google.api.http) = {
+  //     post: "/geneo.analysis.student.apis.StudentAnalysisAPIServiceV1/fetchChapterOverAllAnalysisStats"
+  //     body:"*"
+  //     response_body: "*"
+  //   };
+  //   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+  //     summary: "Lists all topic for particular student."
+  //     description: "List all the topic with score for particular student."
+  //     tags: "analysis"
+  //   };
+  // }
+
+}
+
+// fetchOverAllAnalysisStats Request
+message FetchOverAllAnalysisStatsRequest {
+  int64 student_id = 1; // ID of the student (required)
+}
+
+// fetchOverAllAnalysisStats Response
+message FetchOverAllAnalysisStatsResponse {
+  int32 status = 1; // Response status
+  string code = 2; // Response code
+  string message = 3; // Response message
+  FetchOverAllAnalysisStats data = 4; // Overall analysis stats data (required)
+}
+
+// Overall Analysis Stats
+message FetchOverAllAnalysisStats {
+  int64 student_id = 1; // ID of the student (required)
+  float score_percent = 2; // Score percentage (required)
+  int32 submitted_hw_count = 3; // Number of submitted homework assignments (required)
+  float time_spent_in_min = 4; // Time spent in minutes (required)
+  repeated SubjectPerformanceOverAllStats subjects_performance = 5; // List of subject performance stats (required)
+}
+
+// Subject Performance Stats
+message SubjectPerformanceOverAllStats {
+  int32 subject_id = 1; // ID of the course id (required)
+  geneo.common.db.Subject.SubjectEnum subject = 2; // Subject (required)
+  string subject_icon_image_url = 3; // URL of the subject icon image (required)
+  float score_percent = 4; // Score percentage (required)
+}
+
+// fetchSubjectAnalysisStats Request
+message FetchSubjectAnalysisStatsRequest {
+  int64 student_id = 1; // ID of the student (required)
+  int32 subject_id = 2; // ID of the school course (required)
+}
+
+// fetchSubjectAnalysisStats Response
+message FetchSubjectAnalysisStatsResponse {
+   int32 status = 1; // Response status
+   string code = 2; // Response code
+   string message = 3; // Response message
+   SubjectAnalysisStats data = 4; // Subject analysis stats data (required)
+}
+
+// Subject Analysis Stats
+message SubjectAnalysisStats {
+  int64 student_id = 1; // ID of the student (required)
+  int32 subject_id = 2; // ID of the school course (required)
+  geneo.common.db.Subject.SubjectEnum subject = 3; // Subject (required)
+  float score_percent = 4; // Score percentage (required)
+  int32 submitted_hw_count = 5; // Number of submitted homework assignments (required)
+  float time_spent_in_min = 6; // Time spent in minutes (required)
+  repeated ChapterAnalysisStats chapters_performance = 7; // List of chapter analysis stats (required)
+}
+
+// Chapter Analysis Stats
+message ChapterAnalysisStats {
+  int32 subject_id = 1; // ID of the school course (required)
+  int32 chapter_id = 2; // ID of the chapter (required)
+  string chapter_title = 3; // Title of the chapter (required)
+  string poster_image_url = 4; // URL of the poster image (required)
+  float score_percent = 5; // Score percentage (required)
+  repeated TopicAnalysisStats topics_performance = 6; // List of topic analysis stats
+}
+
+// Topic Analysis Stats
+message TopicAnalysisStats {
+  int32 topic_id = 1; // ID of the topic (required)
+  string topic_title = 2; // Title of the topic (required)
+  string poster_image_url = 3; // URL of the poster image (required)
+  float score_percent = 4; // Score percentage (required)
+}
+
+
+

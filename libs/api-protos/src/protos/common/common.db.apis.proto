@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package geneo.common.db.apis;
+
+
+option go_package = ".";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/field_behavior.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "common/common.db.proto";
+
+service CommonDbAPIServiceV1 {
+  rpc addAcademicYear (AddAcademicYearRequest) returns (geneo.common.db.AcademicYear) {
+    option (google.api.http) = {
+      post: "/geneo.common.apis.CommonDbService/addAcademicYear"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Add an academic Year"
+      description: "Adds the academic year to the db."
+      tags: "Academic Years"
+    };
+  }
+
+
+
+  rpc fetchBoards (FetchBoardsRequest) returns (FetchBoardsResponse) {
+    option (google.api.http) = {
+      post: "/geneo.common.apis.CommonAPIServiceV1/fetchBoards",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Boards"
+      description: "Lists all available boards."
+      tags: "Boards"
+    };
+  }
+
+  rpc fetchAcademicYears (FetchAcademicYearsRequest) returns (FetchAcademicYearsResponse) {
+    option (google.api.http) = {
+      post: "/geneo.common.apis.CommonAPIServiceV1/fetchAcademicYears",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Academic Years"
+      description: "Lists all available academic years."
+      tags: "Academic Years"
+    };
+  }
+
+  rpc fetchClasses (FetchClassesRequest) returns (FetchClassesResponse) {
+    option (google.api.http) = {
+      post: "/geneo.common.apis.CommonAPIServiceV1/fetchClasses",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Classes"
+      description: "Lists all available classes."
+      tags: "Classes"
+    };
+  }
+
+  rpc fetchSubjects (FetchSubjectsRequest) returns (FetchSubjectsResponse) {
+    option (google.api.http) = {
+      post: "/geneo.common.apis.CommonAPIServiceV1/fetchSubjects",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Subjects"
+      description: "Lists all available subjects."
+      tags: "Subjects"
+    };
+  }
+
+  rpc fetchTeachMediums (FetchTeachMediumsRequest) returns (FetchTeachMediumsResponse) {
+    option (google.api.http) = {
+      post: "/geneo.common.apis.CommonAPIServiceV1/fetchTeachMediums",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Fetch Teaching Medium Boards"
+      description: "Lists all available teaching medium boards."
+      tags: "Teaching Medium Boards"
+    };
+  }
+}
+
+message AddAcademicYearRequest {
+  geneo.common.db.AcademicYear.Enum academic_year = 1;
+  google.protobuf.Timestamp academic_year_start = 2; // Start date of the academic year
+  google.protobuf.Timestamp academic_year_end = 3; // End date of the academic year
+}
+
+
+message FetchBoardsRequest {
+  // Add any specific request fields here, if needed.
+}
+
+message FetchBoardsResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.common.db.Board data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+message FetchAcademicYearsRequest {
+  // Add any specific request fields here, if needed.
+}
+
+message FetchAcademicYearsResponse {
+  int32 status = 1 [(google.api.field_behavior) = REQUIRED];
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+  string message = 3 [(google.api.field_behavior) = REQUIRED];
+  repeated geneo.common.db.AcademicYear data = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message FetchClassesRequest {
+  // Add any specific request fields here, if needed.
+}
+
+message FetchClassesResponse {
+  repeated geneo.common.db.Class classes = 1;
+}
+
+message FetchSubjectsRequest {
+  // Add any specific request fields here, if needed.
+}
+
+message FetchSubjectsResponse {
+  repeated geneo.common.db.Subject subjects = 1;
+}
+
+message FetchTeachMediumsRequest {
+  // Add any specific request fields here, if needed.
+}
+
+message FetchTeachMediumsResponse {
+  repeated geneo.common.db.TeachMedium teachingMediumBoards = 1;
+}

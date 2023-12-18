@@ -1,0 +1,236 @@
+syntax = "proto3";
+
+
+package geneo.lms.school.apis;
+
+option go_package = ".";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/field_behavior.proto";
+import "common/common.db.proto";
+import "google/protobuf/empty.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://dev.azure.com/schoolnetindia/Geneo_v2/_git/apis-r2";
+    description: "Learn apis";
+  }
+  schemes: HTTP;
+};
+
+service LmsSchoolAPIServiceV1 {
+  rpc syncSchool (SyncSchoolRequest) returns (SyncSchoolResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.school.apis.LmsSchoolAPIServiceV1/syncSchool"
+      body:"*"
+      response_body: "schoolIds"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Sync School Info with DB."
+      description: "Sync School Info with DB."
+      tags: ""
+    };
+  }
+  rpc syncSchoolClassSection(SyncSchoolClassSectionRequest) returns (SyncSchoolClassSectionResponse){
+    option (google.api.http) = {
+      post: "/geneo.lms.school.apis.LmsSchoolAPIServiceV1/syncSchoolClassSection"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Sync School Class Section  Info with DB."
+      description: "Sync School Class Section Info with DB."
+      tags: ""
+    };
+  }
+  rpc syncSchoolCourses (SyncSchoolCoursesRequest) returns (SyncSchoolCoursesResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.school.apis.LmsSchoolAPIServiceV1/syncSchoolCourses"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Sync School Courses Info with DB."
+      description: "Sync School Courses Info with DB."
+      tags: ""
+    };
+  }
+  rpc syncSchoolTeacherList (SyncSchoolTeacherListRequest) returns (SyncSchoolTeacherListResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.school.apis.LmsSchoolAPIServiceV1/syncSchoolTeacherList"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Sync School Teacher List with DB."
+      description: "Sync School Teacher List with DB."
+      tags: ""
+    };
+  }
+  rpc syncSchoolStudentList (SyncSchoolStudentListRequest) returns (SyncSchoolStudentListResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.school.apis.LmsSchoolAPIServiceV1/syncSchoolStudentList"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Sync School Student List with DB."
+      description: "Sync School Student List with DB."
+      tags: ""
+    };
+  }
+  rpc syncSchoolTeacherCourseMap (SyncSchoolTeacherCourseMapRequest) returns (SyncSchoolTeacherCourseMapResponse) {
+    option (google.api.http) = {
+      post: "/geneo.lms.school.apis.LmsSchoolAPIServiceV1/syncSchoolTeacherCourseMap"
+      body:"*"
+      response_body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Sync School Teacher Course map info with DB."
+      description: "Sync School Teacher Course map info with DB."
+      tags: ""
+    };
+  }
+}
+
+
+message SyncSchoolRequest {
+ repeated SchoolSheetModel schools = 1;
+}
+
+message SyncSchoolResponse {
+    repeated int32 schoolIds = 1;
+}
+
+message SchoolCourseSheetModel {
+   geneo.common.db.Board.BoardEnum board = 1;
+   string teach_medium = 2;
+   geneo.common.db.Class.ClassEnum class = 3;
+   string section = 4;
+   geneo.common.db.Subject.SubjectEnum subject = 5;
+   int32 book_id = 6;
+}
+
+message SyncSchoolCoursesRequest {
+  int32 school_id = 1 ;
+  geneo.common.db.AcademicYear.Enum  academic_year = 2;
+  repeated SchoolCourseSheetModel courses = 3 ;
+}
+
+
+message SPOCInfo {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+}
+
+message SchoolKyanInfo {
+  string school_id = 1;
+  string school_name = 2;
+  repeated string kYan_serial_nos = 3;
+}
+
+message SchoolSheetModel {
+  int32 school_id = 1;
+  int32 school_group_id = 2;
+  string school_name = 3;
+  int32 region_id = 4;
+  string address = 5;
+  string address_lat_long = 6;
+  string address_city = 7;
+  string address_state = 8;
+  string address_country = 9;
+  string address_zip_code = 10;
+  string branch_name = 11;
+  string school_logo_image_url = 12;
+  SPOCInfo school_spoc_info = 13;
+  SPOCInfo geneo_spoc_info = 14;
+  string udise_id = 15;
+  string academicYear = 16;
+  bool isActive = 17;
+  SchoolKyanInfo school_kyan_info = 18;
+}
+
+
+message SyncSchoolCoursesResponse {
+}
+
+message SyncSchoolClassSectionRequest {
+   repeated SchoolClassSection section =1 ;
+}
+message SchoolClassSection {
+  string section_name = 1 ;
+  int32 school_id = 2 ;
+  int32 class_id = 3 ;
+  int32 academic_year_id = 4 ;
+}
+message SyncSchoolClassSectionResponse {
+   repeated int32  school_class_section_id = 1 ;
+}
+message SyncSchoolTeacherListRequest {
+    int32 school_id =  1;
+    repeated SchoolTeacherList  teachers = 2 ;
+}
+message SchoolTeacherList {
+  optional int64 teacherId = 8;
+    string name = 1 ;
+    optional string phone = 2 ;
+    optional string email = 3 ;
+    string username = 4 ;
+    string password = 5 ;
+    bool is_admin = 6 ;
+    bool isActive =7 ;
+}
+message SyncSchoolTeacherListResponse {
+   repeated int64 ids = 1 ;
+}
+
+message SyncSchoolStudentListRequest {
+  int32 school_id = 1 ;
+   repeated SchoolStudentList students = 2;
+}
+
+message SchoolStudentList {
+  int32 school_id = 13;
+  optional int64 student_id = 12;
+   string name = 1 ;
+   int32 roll_no = 2 ;
+   geneo.common.db.Board.BoardEnum board = 3 ;
+   string teach_medium = 4 ;
+   string section = 5 ;
+   geneo.common.db.Class.ClassEnum class = 6 ;
+   string username = 7 ;
+   string password = 8 ;
+   bool isActive = 9 ;
+   string email = 10 ;
+   string phone = 11 ;
+}
+message SyncSchoolStudentListResponse {
+   repeated int64 student_ids = 1;
+}
+message SyncSchoolTeacherCourseMapRequest {
+  int32 school_id = 1 ;
+  geneo.common.db.AcademicYear.Enum academicYear = 2;
+  repeated SchoolTeacherCourse teacher_courses = 3;
+}
+
+message SchoolTeacherCourse {
+  int64 teacher_id = 1 ;
+  string name = 2;
+  repeated TeacherCourse class_subject_map = 3;
+}
+
+message TeacherCourse {
+  geneo.common.db.Board.BoardEnum board = 1 ;
+  string teacher_medium = 2;
+  geneo.common.db.Class.ClassEnum class = 3;
+  string section = 4;
+  geneo.common.db.Subject.SubjectEnum subject = 5;
+}
+
+message SyncSchoolTeacherCourseMapResponse {
+  int32 status = 1 ;
+}

@@ -1,0 +1,1035 @@
+syntax = "proto3";
+
+package geneo.content.db;
+
+option go_package = ".";
+
+import "google/protobuf/timestamp.proto";
+import "user_management/ums.db.proto";
+import "common/common.db.proto";
+
+// Enum for LevelEnum
+enum DifficultyLevelEnum {
+  DIFFICULTY_LEVEL_UNDEFINED = 0;
+  DIFFICULTY_LEVEL_HIGH = 1; // Represents high level type.
+  DIFFICULTY_LEVEL_MEDIUM = 2; // Represents medium level type.
+  DIFFICULTY_LEVEL_LOW = 3; // Represents low level type.
+}
+
+// Enum for CourseApprovalStatusEnum
+enum CourseApprovalStatusEnum {
+  COURSE_APPROVAL_STATUS_UNDEFINED = 0; // Course approval status: Undefined.
+  COURSE_APPROVAL_STATUS_NOT_SUBMITTED = 1; // Course approval status: Not submitted.
+  COURSE_APPROVAL_STATUS_SUBMITTED = 2; // Course approval status: Submitted.
+  COURSE_APPROVAL_STATUS_IN_REVIEW = 3; // Course approval status: In review.
+  COURSE_APPROVAL_STATUS_REVERTED = 4; // Course approval status: Reverted.
+  COURSE_APPROVAL_STATUS_APPROVED = 5; // Course approval status: Approved.
+}
+
+// Enum for ContentElementTypesEnum
+enum ContentElementTypesEnum {
+  CONTENT_ELEMENT_TYPE_UNDEFINED = 0; // Represents undefined content type.
+  CONTENT_ELEMENT_TYPE_TEXT = 1; // Represents text content type.
+  CONTENT_ELEMENT_TYPE_IMAGE = 2; // Represents image content type.
+  CONTENT_ELEMENT_TYPE_AUDIO = 3; // Represents audio content type.
+  CONTENT_ELEMENT_TYPE_VIDEO = 4; // Represents video content type.
+  CONTENT_ELEMENT_TYPE_PDF = 5; // Represents PDF content type.
+  CONTENT_ELEMENT_TYPE_ZIP = 6; // Represents ZIP content type.
+}
+
+// Enum for TaskCreationStatusEnum
+enum CreationStatusEnum {
+  CREATION_STATUS_UNDEFINED = 0; // Task creation status: Undefined.
+  CREATION_STATUS_INITIALIZED = 1; // Task creation status: Initialized.
+  CREATION_STATUS_DRAFT = 2; // Task creation status: Draft.
+  CREATION_STATUS_APPROVED = 3; // Task creation status: Approved.
+  CREATION_STATUS_DUPLICATED = 4; // Task creation status: Duplicated.
+}
+
+// Table structure for content_management.content_default_instructions
+message ContentDefaultInstructions {
+  optional int32 content_instruction_id = 1; // Primary key for content default instructions
+  Content.ContentEnum content_type = 2; // Type of content
+  repeated string instructions = 3; // Array of instructions for content
+  google.protobuf.Timestamp created_on = 4; // Creation timestamp
+  optional int64 created_by = 5; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 6; // Last modification timestamp
+  optional int64 modified_by = 7; // User who last modified the entry
+}
+
+message ContentMetaInfo {
+  // Enum for ContextEnum
+  enum ContextEnum {
+    CONTEXT_UNDEFINED = 0;
+    CONTEXT_DIRECT = 1; // Represents direct context type.
+    CONTEXT_ENHANCED = 2; // Represents enhanced context type.
+    CONTEXT_GENIUS = 3; // Represents geneo context type.
+  }
+
+  repeated geneo.common.db.Class.ClassEnum class = 1;
+  repeated geneo.common.db.Board.BoardEnum board = 2;
+  repeated geneo.common.db.Subject.SubjectEnum subject = 3;
+  repeated string book_id = 4;
+  ContextEnum contextualization = 5;
+  DifficultyLevelEnum difficulty_level = 6;
+  repeated string credits = 7;
+  repeated string concept = 8;
+}
+
+message QuestionMetaInfo {
+  // Enum for ContextEnum
+  enum QuestionContextEnum {
+    QUESTION_CONTEXT_UNDEFINED = 0;
+    QUESTION_CONTEXT_DIRECT = 1; // Represents direct context type.
+    QUESTION_CONTEXT_ENHANCED = 2; // Represents enhanced context type.
+    QUESTION_CONTEXT_GENIUS = 3; // Represents geneo context type.
+  }
+
+  repeated geneo.common.db.Class.ClassEnum class = 1;
+  repeated geneo.common.db.Board.BoardEnum board = 2;
+  repeated geneo.common.db.Subject.SubjectEnum subject = 3;
+  repeated string book_id = 4;
+  QuestionContextEnum contextualization = 5;
+  DifficultyLevelEnum difficulty_level = 6;
+  repeated string credits = 7;
+}
+
+//Element types:
+message TextType {
+  string text = 1;
+}
+
+message TextBoxType {
+  string box_text = 1;
+}
+
+message TextLeftType {
+  string text_left = 1;
+}
+
+message TextRightType {
+  string text_right = 1;
+}
+
+message TextCenterType {
+  string text_center = 1;
+}
+
+message HeadingType {
+  string heading = 1;
+}
+
+message SubHeadingType {
+  string sub_heading = 1;
+}
+
+message ComprehensionPassage {
+  string comprehension_passage_text =1;
+}
+
+message ImageType {
+  string image_url = 1;
+  string image_name = 2;
+  optional string image_description = 3;
+  repeated string credits = 4;
+}
+
+message VideoType {
+  string video_url = 1;
+  string video_name = 2;
+  optional string video_description = 3;
+  optional string thumbnail_image_url = 4;
+  repeated string credits = 5;
+  repeated SubTitlesInfoModel sub_titles = 6;
+  optional string external_subtitles_srt_url = 7;
+  optional string video_title = 8;
+}
+
+message AudioType {
+  string audio_url = 1;
+  optional string audio_name = 2;
+  optional string audio_description = 3;
+  optional string thumbnail_image_url = 4;
+  repeated string credits = 5;
+  repeated SubTitlesInfoModel sub_titles = 6;
+  optional string external_subtitles_srt_url = 7;
+}
+
+message SubTitlesInfoModel {
+  google.protobuf.Timestamp start_time = 1;
+  google.protobuf.Timestamp end_time = 2;
+  int32 media_total_duration = 3;
+  repeated string lines = 4;
+}
+
+message TableType {
+  TableDataModel table = 1;
+}
+
+message TableDataModel {
+  optional string title = 1;
+  optional bool has_header = 2;
+  optional bool has_footer = 3;
+  repeated CellContent content = 4;
+  repeated MergedCellsInfo merged_cells = 5;
+}
+
+message CellContent {
+  int32 row = 1;
+  int32 column = 2;
+  optional TextType text_type = 3;
+  optional ImageType image_type = 4;
+}
+
+message MergedCellsInfo {
+  Cell start = 1;
+  Cell end = 2;
+}
+
+message Cell {
+  int32 row = 1;
+  int32 column = 2;
+}
+
+message TableContentType {
+  oneof type {
+    TextType text_type = 1;
+    ImageType image_type = 2;
+  }
+}
+message ExcerptType {
+  string excerpt = 1;
+}
+
+message BulletedListType {
+  repeated string list_items = 1;
+}
+
+message NumberedListType {
+  repeated string list_items = 1;
+}
+
+enum FileEnum {
+    FILE_TYPE_UNKNOWN = 0;
+    FILE_TYPE_TEXT = 1;
+    FILE_TYPE_IMAGE = 2;
+    FILE_TYPE_AUDIO = 3;
+    FILE_TYPE_VIDEO = 4;
+    FILE_TYPE_DOCUMENT = 5;
+    FILE_TYPE_SPREADSHEET = 6;
+    FILE_TYPE_PRESENTATION = 7;
+    FILE_TYPE_ARCHIVE = 8;
+    FILE_TYPE_PDF = 9;
+    FILE_TYPE_URL = 10;
+}
+
+enum FileExtensionEnum {
+    FILE_EXTENSION_UNKNOWN = 0;
+    FILE_EXTENSION_TXT = 1;
+    FILE_EXTENSION_JPG = 2;
+    FILE_EXTENSION_GIF = 3;
+    FILE_EXTENSION_PNG = 4;
+    FILE_EXTENSION_MP3 = 5;
+    FILE_EXTENSION_MP4 = 6;
+    FILE_EXTENSION_DOCX = 7;
+    FILE_EXTENSION_XLSX = 8;
+    FILE_EXTENSION_PPTX = 9;
+    FILE_EXTENSION_ZIP = 10;
+    FILE_EXTENSION_HTTPS = 11;
+    FILE_EXTENSION_PDF = 12;
+}
+
+message ExternalResourceType {
+  FileEnum file_type = 1;
+  string file_name = 2;
+  optional int32 file_size_in_mb =3;
+  string file_url = 4;
+  optional string external_web_resource_url = 5;
+  FileExtensionEnum file_extension_type = 6;
+  optional int32 start_page_number = 7;
+  optional int32 end_page_number = 8;
+}
+
+message ContentElementType {
+  oneof model {
+    HeadingType heading = 1;
+    SubHeadingType sub_heading = 2;
+    TextType text = 3;
+    TextLeftType text_left = 4;
+    TextCenterType text_center = 5;
+    TextRightType text_right = 6;
+    TableType table = 7;
+    ExcerptType excerpt = 8;
+    ImageType image = 9;
+    VideoType video = 10;
+    AudioType audio = 11;
+    ExternalResourceType external_resource = 12;
+    ComprehensionPassage comprehension_passage = 13;
+    BulletedListType bullet_list = 14;
+    NumberedListType number_list = 16;
+    TextBoxType text_box = 15;
+  }
+}
+
+message QuestionElementType {
+  oneof model {
+    HeadingType heading = 1;
+    SubHeadingType sub_heading = 2;
+    TextType text = 3;
+    TextLeftType text_left = 4;
+    TextCenterType text_center = 5;
+    TextRightType text_right = 6;
+    TableType table = 7;
+    ExcerptType excerpt = 8;
+    ImageType image = 9;
+    VideoType video = 10;
+    AudioType audio = 11;
+    ExternalResourceType external_resource = 12;
+    ComprehensionPassage comprehension_passage = 13;
+    BulletedListType bullet_list = 14;
+    NumberedListType number_list =  16;
+    TextBoxType text_box = 15;
+  }
+}
+
+message SolutionElementType {
+  oneof model {
+    HeadingType heading = 1;
+    SubHeadingType sub_heading = 2;
+    TextType text = 3;
+    TextLeftType text_left = 4;
+    TextCenterType text_center = 5;
+    TextRightType text_right = 6;
+    TableType table = 7;
+    ExcerptType excerpt = 8;
+    ImageType image = 9;
+    VideoType video = 10;
+    AudioType audio = 11;
+    ExternalResourceType external_resource = 12;
+    ComprehensionPassage comprehension_passage = 13;
+    BulletedListType bullet_list = 14;
+    NumberedListType number_list = 16;
+    TextBoxType text_box = 15;
+  }
+}
+
+message QuestionCommonContentModel {
+  repeated ContentElementType elements = 1;
+  int32 time = 2;
+  repeated float marks = 3;
+  repeated SolutionElementType solution = 4;
+  repeated string ans_explanation = 5;
+  repeated string hint = 6;
+  optional string video_solution_content_id = 7;
+}
+
+message TextOption {
+  string option_text =1;
+  optional string correct_incorrect_explanation_text = 2;
+}
+
+message ImageOption {
+  ImageType image =1;
+  optional string correct_incorrect_explanation_text = 2;
+}
+
+message OptionsType {
+  oneof optionType {
+    TextOption text_option = 1;
+    ImageOption image_option =2;
+  }
+}
+
+message FibContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated BlankCorrectAnswerInfo correct_answer_info = 2; //correct: string[][] //TODO
+}
+
+message BlankCorrectAnswerInfo {
+  int32 blank_position = 1;
+  repeated string correct = 2;
+}
+
+message TfContentModel {
+  enum AnswerEnum {
+    TF_ANSWER_UNDEFINED = 0; // Represents undefined answer type.
+    TF_ANSWER_T = 1; // Represents tf true answer type.
+    TF_ANSWER_F = 2; // Represents tf false answer type.
+  }
+  QuestionCommonContentModel common_question_content = 1;
+  AnswerEnum correct = 2;
+}
+
+message McqSingleContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated OptionsType options = 2;
+  string correct = 3;
+}
+
+message McqMultipleContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated OptionsType options = 2;
+  repeated string correct = 3;
+}
+
+message EvaluationRubrics {
+  repeated string generics = 1;
+  repeated string specifics = 2;
+}
+
+enum ContentGeneratorEnum {
+  CONTENT_GENERATOR_TYPE_UNDEFINED = 0;
+  CONTENT_GENERATOR_TYPE_CONTENT_UTILITY = 1;
+  CONTENT_GENERATOR_TYPE_LLM = 2;
+}
+
+message SampleAnswer {
+  string answer = 1;
+  ContentGeneratorEnum generated_by = 2;
+}
+
+message BookReference {
+  int32 book_id = 1;
+  int32 start_page = 2;
+  int32 end_page = 3;
+}
+
+message ContextReference {
+  oneof optionType {
+    ExternalResourceType resource = 1;
+    BookReference book_reference =2;
+  }
+}
+
+message LongQuesContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated SampleAnswer sampleAnswers = 2;
+  optional EvaluationRubrics evaluation_rubrics = 3;
+  repeated ContextReference context_references = 4;
+}
+
+message ShortQuesContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated SampleAnswer sampleAnswers = 2;
+  optional EvaluationRubrics evaluation_rubrics = 3;
+  repeated ContextReference context_references = 4;
+}
+
+message VeryShortQuesContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated SampleAnswer sampleAnswers = 2;
+  optional EvaluationRubrics evaluation_rubrics = 3;
+  repeated ContextReference context_references = 4;
+}
+
+message MTFSingleQuesContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated OptionsType left_options = 2 ; //["a", "img_b", "c"]
+  repeated OptionsType right_options = 3 ; //["x", "img_y", "z"]
+  repeated MTFSingleCorrectAnswersInfo correct_response_indices = 4;  //["a": ["x", "img_y"], "b": ["img_y"], "c": ["z"]]
+}
+
+message MTFMultipleQuesContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated OptionsType left_options = 2 ; //["a", "img_b", "c"]
+  repeated OptionsType right_options = 3 ; //["x", "img_y", "z"]
+  repeated MTFMultipleCorrectAnswersInfo correct_response_indices = 4;  //["a": ["x", "img_y"], "b": ["img_y"], "c": ["z"]]
+}
+
+message MTFSingleCorrectAnswersInfo {
+  int32 left_option_index = 1;
+  int32 right_option_index = 2;
+}
+
+message MTFMultipleCorrectAnswersInfo {
+  int32 left_option_index = 1;
+  repeated int32 right_option_indexes = 2;
+}
+
+message ArrangeQuestionContentModel {
+  QuestionCommonContentModel common_question_content = 1;
+  repeated OptionsType options = 2 ; //["a", "img_b", "c"]
+  repeated int32 correct_sequence = 3 ;
+}
+
+message QuestionContentModel {
+  oneof model {
+    FibContentModel fib_content_model = 1;
+    TfContentModel tf_content_model = 2;
+    McqSingleContentModel mcq_single_content_model = 3;
+    McqMultipleContentModel mcq_multiple_content_model = 4;
+    LongQuesContentModel long_ques_content_model = 5;
+    VeryShortQuesContentModel very_short_ques_content_model = 6;
+    ShortQuesContentModel short_ques_content_model = 7;
+    MTFSingleQuesContentModel mtf_single_ques_content_model = 8;
+    MTFMultipleQuesContentModel mtf_multiple_ques_content_model = 9;
+    ArrangeQuestionContentModel arrange_question_content_model = 10;
+  }
+}
+
+message PassageContentModel {
+   repeated ContentElementType elements = 1;
+}
+
+message GeneralAllowedElements {
+  oneof model {
+    HeadingType heading = 1; // Heading element
+    SubHeadingType sub_heading = 2; // Subheading element
+    TextType text = 3; // Text element
+    TextLeftType text_left = 4; // Text aligned to the left
+    TextCenterType text_center = 5; // Text aligned to the center
+    TextRightType text_right = 6; // Text aligned to the right
+    TableType table = 7; // Table element
+    ExcerptType excerpt = 8; // Excerpt element
+    ImageType image = 9; // Image element
+    VideoType video = 10; // Video element
+    AudioType audio = 11; // Audio element
+    ExternalResourceType external_resource = 12; // External resource element
+    string note = 13; // Note element
+    AskInstructionModel ask = 14; // Ask instruction element
+    string say = 15; // Say element
+    string do = 16; // Do element
+    string explain = 17; // Explain element
+    string discuss = 18; // Discuss element
+    string teacher_note = 19; // Teacher's note element
+    VideoType teacher_video = 20; // Teacher's video element
+    ImageType teacher_image = 21; // Teacher's image element
+    BulletedListType bullet_list = 22;
+    NumberedListType number_list = 24;
+    TextBoxType text_box = 23;
+  }
+}
+
+
+
+message TextElementType {
+  oneof model {
+    HeadingType heading = 1;
+    SubHeadingType sub_heading = 2;
+    TextType text = 3;
+    TextLeftType text_left = 4;
+    TextCenterType text_center = 5;
+    TextRightType text_right = 6;
+    BulletedListType bullet_list = 7;
+    NumberedListType number_list = 9;
+    TextBoxType text_box = 8;
+  }
+}
+
+
+message ExperimentAimInfo {
+  repeated ContentElementType elements = 1;
+}
+
+message ExperimentResourcesRequiredInfo {
+  repeated ContentElementType elements = 1;
+}
+
+message ExperimentProcedureInfo {
+  repeated ContentElementType elements = 1;
+}
+
+message ExperimentCautionInfo {
+  repeated ContentElementType elements = 1;
+}
+
+message ExperimentObservationsInfo {
+  repeated ContentElementType elements = 1;
+}
+
+message ExperimentConclusionInfo {
+  repeated ContentElementType elements = 1;
+}
+
+message ExperimentFaqInfo {
+  repeated ContentElementType elements = 1;
+}
+
+message ExperimentContentModel {
+  string title = 1;
+  optional ExperimentAimInfo aim =2;
+  optional ExperimentResourcesRequiredInfo resources_required = 3;
+  optional ExperimentProcedureInfo procedure = 4;
+  optional ExperimentCautionInfo caution = 5;
+  optional ExperimentObservationsInfo observations = 6;
+  optional ExperimentConclusionInfo conclusion = 7;
+  optional ExperimentFaqInfo faq = 8;
+}
+
+message ContentVideoContentModel {
+  repeated ContentElementType elements = 1;
+  string primary_video_url = 2;
+}
+
+message ContentVideoElementType {
+
+}
+
+message FlashCardContentModel {
+  repeated FlashCardElementType card_front = 1;
+  repeated FlashCardElementType card_back = 2;
+  repeated string hint = 3;
+}
+
+message FlashCardElementType {
+  oneof model {
+    HeadingType heading = 1;
+    SubHeadingType sub_heading = 2;
+    TextType text = 3;
+    TextLeftType text_left = 4;
+    TextCenterType text_center = 5;
+    TextRightType text_right = 6;
+    TableType table = 7;
+    ExcerptType excerpt = 8;
+    ImageType image = 9;
+    VideoType video = 10;
+    AudioType audio = 11;
+    ExternalResourceType external_resource = 12;
+    ComprehensionPassage comprehension_passage = 13;
+    BulletedListType bullet_list = 14;
+    NumberedListType number_list = 16;
+    TextBoxType text_box = 15;
+  }
+}
+
+message MindMapContentModel {
+  repeated MindMapNodeInfo mind_map = 1;
+}
+
+message MindMapNodeInfo {
+  optional string node_id = 1;
+  repeated ContentElementType contents = 2;
+  repeated MindMapNodeInfo children = 3;
+}
+
+message AskInstructionModel {
+    string question = 1;
+    string answer = 2;
+}
+
+message InstructionElementType {
+  oneof instruction {
+    HeadingType heading = 1; // Heading element
+    SubHeadingType sub_heading = 2; // Subheading element
+    TextType text = 3; // Text element
+    TextLeftType text_left = 4; // Text aligned to the left
+    TextCenterType text_center = 5; // Text aligned to the center
+    TextRightType text_right = 6; // Text aligned to the right
+    TableType table = 7; // Table element
+    BulletedListType bullet_list = 8; // Bulleted list element
+    NumberedListType number_list = 9; // Numbered list element
+    TextBoxType text_box = 10; // Text box element
+    string note = 12; // Note element
+    AskInstructionModel ask = 13; // Ask instruction element
+    string ask_question = 26;
+    string ask_answer = 27;
+    string say = 14; // Say element
+    string do = 15; // Do element
+    string explain = 16; // Explain element
+    string discuss = 17; // Discuss element
+    string teacher_note = 18; // Teacher note element
+    VideoType teacher_video = 19; // Teacher video element
+    ImageType teacher_image = 20; // Teacher image element
+    ExcerptType excerpt = 21; // Excerpt element
+    VideoType video = 22; // Video element
+    ImageType image = 23; // Image element
+    AudioType audio = 24; // Audio element
+    ExternalResourceType external_resource = 25; // External resource element
+  }
+}
+
+
+
+message InstructionModel {
+  repeated InstructionElementType elements = 1;
+}
+
+message ContentModel {
+  oneof model {
+    PassageContentModel passage = 1;
+    ExperimentContentModel experiment = 2;
+    ContentVideoContentModel content_video = 3;
+    FlashCardContentModel flash_card = 4;
+    MindMapContentModel mind_map = 5;
+  }
+}
+
+message ImplementedContentModel {
+  oneof model {
+    Content content = 1;
+    Question question = 2;
+    ResourceTeacherInstruction instruction = 3;
+  }
+}
+message ResourceContentModelType {
+  oneof model {
+    Content content = 1;
+    Question question = 2;
+    ResourceTeacherInstruction instruction = 3;
+  }
+}
+
+// Table structure for content_management.content
+message Content {
+  // Enum for ContentEnum
+  enum ContentEnum {
+    CONTENT_TYPE_UNDEFINED = 0; // Represents undefined content type.
+    CONTENT_TYPE_PASSAGE = 1; // Represents passage content type.
+    CONTENT_TYPE_EXPERIMENT = 2; // Represents experiment content type.
+    CONTENT_TYPE_CONTENT_VIDEO = 3; // Represents content video content type.
+    CONTENT_TYPE_FLASHCARD = 4; // Represents flashcard content type.
+    CONTENT_TYPE_MINDMAP = 5; // Represents mindmap content type.
+  }
+
+  int32 id = 1; // Primary key for content
+  optional string content_id = 2; // Referencing key for content
+  string title = 3; // Title of the content
+  optional string description = 4; // Description of the content (optional)
+  optional string poster_image_url = 5; // URL of the poster image (optional)
+  ContentEnum content_type = 6; // Type of content
+  ContentModel content = 7; // JSONB content
+  string content_text = 8; // Complete content in a single text string for search engine
+  repeated string learning_outcomes_ids = 9; // Array of learning outcome
+  optional int64 teacher_id = 10; // Foreign key referencing teacher_profile.teacher_id
+  ContentMetaInfo content_meta = 11; // Content meta key for saving meta info
+  google.protobuf.Timestamp created_on = 12; // Creation timestamp
+  int64 created_by = 13; // User who created the entry
+  google.protobuf.Timestamp modified_on = 14; // Last modification timestamp
+  int64 modified_by = 15; // User who last modified the entry
+  optional string video_solution_of_question_Id = 16; //Exists only for content-video model for solution as independent content-video for specific question_id
+}
+
+// Table structure for content_management.question
+message Question {
+  // Enum for QuestionEnum
+  enum QuestionEnum {
+    QUESTION_TYPE_UNDEFINED = 0; // Represents undefined question type.
+    QUESTION_TYPE_FIB = 1; // Represents fill in the blanks question type.
+    QUESTION_TYPE_MTF = 2; // Represents math the following question type.
+    QUESTION_TYPE_MCQS = 3; // Represents multiple-choice single answer question type.
+    QUESTION_TYPE_MCQM = 4; // Represents multiple-choice multiple answers question type.
+    QUESTION_TYPE_TF = 5; // Represents true/false question type.
+    QUESTION_TYPE_VERY_SHORT = 6; // Represents short answer question type.
+    QUESTION_TYPE_SHORT = 7; // Represents short answer question type.
+    QUESTION_TYPE_LONG = 8; // Represents long answer question type.
+    QUESTION_TYPE_ARRANGE = 9; // Represents arrange in order question type.
+    QUESTION_TYPE_LABEL = 10; // Represents label question type.
+  }
+
+  int32 id = 1; // Primary key for content
+  optional string question_id = 2; // Referencing key for question
+  string title = 3; // Title of the question
+  optional string description = 4; // Description of the question (optional)
+  optional string poster_image_url = 5; // URL of the poster image (optional)
+  QuestionEnum question_type = 6; // Type of question
+  QuestionContentModel question = 7; // JSONB question
+  string question_text = 8; // Complete question in a single text string for search engine
+  repeated string learning_outcomes_ids = 9; // Array of learning outcome Referencing key
+  optional int64 teacher_id = 10; // Foreign key referencing teacher_profile.teacher_id
+  QuestionMetaInfo question_meta = 11; // Content meta key for saving meta info
+  google.protobuf.Timestamp created_on = 12; // Creation timestamp
+  int64 created_by = 13; // User who created the entry
+  google.protobuf.Timestamp modified_on = 14; // Last modification timestamp
+  int64 modified_by = 15; // User who last modified the entry
+}
+
+
+// Table structure for content_management.module
+message Module {
+  // Enum for ModuleCategoryEnum
+  enum ModuleCategoryEnum {
+    MODULE_CATEGORY_UNDEFINED = 0; // Represents undefined module category.
+    MODULE_CATEGORY_BOOK = 1; // Represents book module category.
+    MODULE_CATEGORY_CHAPTER = 2; // Represents chapter module category.
+    MODULE_CATEGORY_TOPIC = 3; // Represents topic module category.
+  }
+
+  optional int32 module_id = 1; // Primary key for module
+  string name = 2; // Name of the module
+  string poster_image_url = 3;
+  string short_description = 4; // Short description of the module
+  string long_description = 5; // Long description of the module
+  optional int32 parent_module_id = 6; // Foreign key referencing content_management.module.module_id
+  optional int32 book_id = 7; // Foreign key referencing common.book.book_id
+  ModuleCategoryEnum category = 8; // Category of the module
+  int32 level = 9; // Level of the module
+  int32 rank = 10;
+  google.protobuf.Timestamp created_on = 11; // Creation timestamp
+  optional int64 created_by = 12; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 13; // Last modification timestamp
+  optional int64 modified_by = 14; // User who last modified the entry
+  optional google.protobuf.Timestamp deleted_at = 15;
+}
+
+
+message PDFResource {
+  string pdf_url = 1;
+  int32 no_of_pages = 2;
+  optional int32 start_page =3;
+  optional int32 end_page =4;
+}
+
+message ModuleBookContent {
+  optional int32 book_module_id = 1; // Primary key for bppk-module
+  optional int32 module_id = 2; // Foreign key for module
+  optional int32 book_id = 3; // Foreign key referencing common.book.book_id
+  optional int32 child_count = 4;
+  PDFResource pdf = 5; // URL of the book's PDF
+  repeated string html_content = 6;
+  repeated string image_page_urls = 7;
+  string cover_image_url = 8; // URL of the book's cover image
+  optional google.protobuf.Timestamp deleted_at = 9;
+
+}
+
+// Table structure for content_management.learning_outcome
+message LearningOutcome {
+  optional int32 id = 1; // Primary key for learning outcome
+  optional string learning_outcome_id = 2; // Referencing key for learning outcome
+  string learning_outcome = 3; // Name of the learning outcome
+  string short_description = 4; // Short description of the learning outcome
+  string long_description = 5; // Long description of the learning outcome
+  google.protobuf.Timestamp created_on = 6; // Creation timestamp
+  optional int64 created_by = 7; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 8; // Last modification timestamp
+  optional int64 modified_by = 9; // User who last modified the entry
+}
+
+// Enum for ResourceCategoryEnum
+enum ResourceCategoryEnum {
+  RESOURCE_CATEGORY_UNDEFINED = 0; // Represents undefined category.
+  RESOURCE_CATEGORY_HOOK = 1; // Represents hook resource category.
+  RESOURCE_CATEGORY_EXPLANATION = 2; // Represents explanation resource category.
+  RESOURCE_CATEGORY_SOLVED_EXAMPLES = 3; // Represents solved examples resource category.
+  RESOURCE_CATEGORY_EXAMPLES = 4; // Represents examples resource category.
+  RESOURCE_CATEGORY_PRACTICE = 5; // Represents practice resource category.
+  RESOURCE_CATEGORY_REVISION = 6; // Represents revision resource category.
+  RESOURCE_CATEGORY_ACTIVITY = 7; // Represents activity resource category.
+  RESOURCE_CATEGORY_REAL_LIFE_CONNECT = 8; // Represents real-life connect resource category.
+  RESOURCE_CATEGORY_COMPETENCY_BASED_QUESTIONS = 9; // Represents competency-based questions resource category.
+  RESOURCE_CATEGORY_INTRODUCTION = 10; // Represents introduction resource category.
+  RESOURCE_CATEGORY_COMPETITIVE_EXAM = 11; // Represents competitive exam resource category.
+  RESOURCE_CATEGORY_READING = 12; // Represents reading resource category.
+  RESOURCE_CATEGORY_RECITATION = 13; // Represents recitation resource category.
+  RESOURCE_CATEGORY_END_OF_CHAPTER = 14; // Represents end of chapter resource category.
+  RESOURCE_CATEGORY_GRAMMAR = 15; // Represents grammar resource category.
+  RESOURCE_CATEGORY_END_OF_POEM = 16; // Represents end of poem resource category.
+  RESOURCE_CATEGORY_TEST_PAPER = 17; // Represents test paper resource category.
+}
+
+// Table structure for content_management.resource
+message Resource {
+
+
+  // Enum for ResourceEnum
+  enum ResourceEnum {
+    RESOURCE_TYPE_UNDEFINED = 0; // Represents undefined resource type.
+    RESOURCE_TYPE_VIDEO = 1; // Represents contain primary video resource type.
+    RESOURCE_TYPE_AUDIO = 2; // Represents contain primary audio resource type.
+    RESOURCE_TYPE_READING = 3; // Represents contain primary reading resource type.
+    RESOURCE_TYPE_QUESTION_SET = 4; // Represents contain primary question set resource type.
+    RESOURCE_TYPE_QUESTION = 5; // Represents contain primary question resource type.
+    RESOURCE_TYPE_PRACTICE = 6; // Represents contain primary practice resource type.
+    RESOURCE_TYPE_TEST = 7; // Represents contain primary test resource type.
+    RESOURCE_TYPE_ACTIVITY = 8; // Represents contain primary activity resource type.
+    RESOURCE_TYPE_SIMULATION = 9; // Represents contain primary simulation resource type.
+    RESOURCE_TYPE_EXPLORIMENT = 10; // Represents contain primary exploriment resource type.
+    RESOURCE_TYPE_GAME = 11; // Represents contain primary game resource type.
+    RESOURCE_TYPE_AR_VR = 12; // Represents contain primary AR/VR resource type.
+    RESOURCE_TYPE_PPT = 13; // Represents contain primary PPT resource type.
+    RESOURCE_TYPE_E_BOOK = 14; // Represents contain primary e-book resource type.
+    RESOURCE_TYPE_PDF = 15; // Represents contain primary PDF resource type.
+    RESOURCE_TYPE_FLASHCARDS = 16; // Represents contain primary flashcards resource type.
+    RESOURCE_TYPE_MINDMAP = 17; // Represents contain primary mindmap resource type.
+  }
+  int32 id = 1; // Primary key for resource
+  optional string resource_id = 2; // Referencing key for resource
+  string title = 3; // Title of the resource
+  string poster_image_url = 4; // URL of the resource's poster image
+  int32 estimated_time_in_min = 5; // Estimated time in minutes for the resource
+  ResourceEnum resource_type = 6; // Type of the resource
+  repeated string learning_outcomes_ids = 7; // Array of learning outcome IDs
+  ResourceCategoryEnum resource_category = 8; // Category type of the resource
+  google.protobuf.Timestamp created_on = 9; // Creation timestamp
+  int64 created_by = 10; // User who created the entry
+  google.protobuf.Timestamp modified_on = 11; // Last modification timestamp
+  int64 modified_by = 12; // User who last modified the entry
+}
+
+message ResourceContentRevisionInfo {
+  int32 revision_number = 1;
+  string created_by = 2;
+  google.protobuf.Timestamp created_on = 3;
+  google.protobuf.Timestamp deactivated_on = 4;
+}
+
+message ResourceContentData {
+  optional string resource_id = 1;
+  int32 num_of_pages = 2;
+  repeated string content_ids = 3;
+  repeated int32 instruction_ids = 4;
+  repeated string question_ids = 5;
+  repeated PageContentInfo content_flow = 6; //JSONB
+}
+
+message PageContentInfo {
+  int32 page_number = 1;
+  repeated string content_ids = 2;
+  repeated string question_ids = 3;
+  repeated string instruction_ids = 4;
+  repeated string over_all_id_sequence= 5;
+  repeated ImplementedContentModel contents = 6;
+}
+
+message ResourceContentDataInfo {
+  repeated PageContentInfo page_content = 1;
+}
+
+// Table structure for content_management.resource_content
+message ResourceContent {
+  optional int32 resource_content_id = 1; // Primary key for resource content
+  optional string resource_id = 2; // Foreign key referencing content_management.resource.resource_id
+  string resource_content_version = 3; // Version of this resource content
+  ResourceContentRevisionInfo content_revision_info = 4;
+  bool is_active = 5; // Indicates if the resource content is active/inactive
+  ResourceContentDataInfo resource_content_data = 6; // JSONB resource content data
+  google.protobuf.Timestamp created_on = 7; // Creation timestamp
+  optional int64 created_by = 8; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 9; // Last modification timestamp
+  optional int64 modified_by = 10; // User who last modified the entry
+  optional string gcp_json_url = 11;
+}
+
+// Table structure for content_management.resource_teacher_instruction
+message ResourceTeacherInstruction {
+  optional int32 id = 1; // Primary key for resource teacher instruction
+  optional string resource_teacher_instruction_id = 2; // Referencing key for resource teacher instruction
+  optional string resource_id = 3; // Foreign key referencing content_management.resource.resource_id
+  InstructionModel instruction_content = 4;
+  optional int64 teacher_id = 5; // Foreign key referencing teacher_profile.teacher_id
+  google.protobuf.Timestamp created_on = 6; // Creation timestamp
+  optional int64 created_by = 7; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 8; // Last modification timestamp
+  optional int64 modified_by = 9; // User who last modified the entry
+}
+
+// Table structure for content_management.module_resource_tag
+message ModuleResourceTag {
+  optional int32 id = 1; // Primary key referencing content_management.module.module_id
+  optional int32 module_id = 2; // Foreign key referencing content_management.module.module_id
+  optional string resource_id = 3; // Foreign key referencing content_management.resource.resource_id
+  int32 rank = 4; // Rank of the module resource tag
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+  optional google.protobuf.Timestamp deleted_at = 9;
+  optional ResourceCategoryEnum module_resource_category = 10; // Category type of the resource
+
+}
+
+// Table structure for content_management.lesson
+message Lesson {
+  optional int32 id = 1; // Primary key for lesson plan
+  optional string lesson_id = 2; // Referencing key for lesson plan
+  string title = 3; // Title of the lesson plan
+  optional int32 course_id = 4; // Foreign key referencing content_management.course.course_id
+  optional int32 module_id = 5; // Foreign key referencing content_management.module.module_id
+  int32 estimated_time_in_min = 6; // Estimated time for the lesson plan
+  repeated string resource_ids = 7; // Array of resource IDs
+  CreationStatusEnum creation_status = 8; // Creation status of the lesson plan
+  optional string source_lesson_id = 9; // ID of the source lesson plan
+  repeated string learning_outcomes_ids = 10; // Array of learning outcome IDs
+  google.protobuf.Timestamp created_on = 11; // Creation timestamp
+  int64 created_by = 12; // User who created the entry
+  google.protobuf.Timestamp modified_on = 13; // Last modification timestamp
+  int64 modified_by = 14; // User who last modified the entry
+  optional string poster_image_url = 15;
+  optional google.protobuf.Timestamp deleted_at = 16;
+  optional int64 teacher_id = 17;
+  optional int32 school_class_section_id = 18;
+}
+
+
+// Table structure for content_management.module_resource_tag
+message ModuleLessonTag {
+  optional int32 id = 1; // Primary key referencing content_management.module.module_id
+  optional int32 module_id = 2; // Foreign key referencing content_management.module.module_id
+  optional string lesson_id = 3; // Foreign key referencing content_management.resource.resource_id
+  int32 rank = 4; // Rank of the module resource tag
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+  optional google.protobuf.Timestamp deleted_at = 9;
+
+}
+
+// Table structure for content_management.content_upload
+message ContentUpload {
+  optional string content_id = 1; // Primary key for content upload
+  optional int32 profile_id = 2; // Profile ID of the content uploader
+  geneo.ums.db.ProfileRolesEnum profile_role = 3; // Role of the uploader
+  Content.ContentEnum content_type = 4; // Type of the content
+  string filename = 5; // Name of the uploaded file
+  string file_url = 6; // URL of the uploaded file
+  google.protobuf.Timestamp created_on = 7; // Creation timestamp
+  optional int64 created_by = 8; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 9; // Last modification timestamp
+  optional int64 modified_by = 10; // User who last modified the entry
+}
+
+message QuestionBank {
+ // Enum for QuestionBankCategoryEnum
+ enum QuestionBankCategoryEnum {
+  QUESTION_BANK_CATEGORY_UNDEFINED = 0; // Represents undefined module category.
+  QUESTION_BANK_CATEGORY_BOOK = 1; // Represents book module category.
+  QUESTION_BANK_CATEGORY_CHAPTER = 2; // Represents chapter module category.
+  QUESTION_BANK_CATEGORY_TOPIC = 3; // Represents topic module category.
+  QUESTION_BANK_CATEGORY_CONECPT = 4; // Represents topic module category.
+  QUESTION_BANK_CATEGORY_LO = 5; // Represents topic module category.
+}
+
+  optional int32 id = 1; // Primary key for question bank
+  optional string question_bank_id = 2; // Referencing key for  question bank
+  optional string title = 3; // Title of the  question bank
+  optional string poster_image_url = 4;
+  optional int32 module_id = 5; // Foreign key referencing content_management.module.module_id
+  int32 estimated_time_in_min = 6; // Estimated time for the  question bank
+  repeated string question_ids = 7; // Array of resource IDs
+  repeated string learning_outcomes_ids = 8; // Array of learning outcome IDs
+  google.protobuf.Timestamp created_on = 9; // Creation timestamp
+  int64 created_by = 10; // User who created the entry
+  google.protobuf.Timestamp modified_on = 11; // Last modification timestamp
+  int64 modified_by = 12; // User who last modified the entry
+}
+
+
+// Table structure for content_management.module_resource_tag
+message ModuleQuestionBankTag {
+  optional int32 id = 1; // Primary key referencing content_management.module.module_id
+  optional int32 module_id = 2; // Foreign key referencing content_management.module.module_id
+  optional string question_bank_id = 3; // Foreign key referencing content_management.question_bank.question_bank
+  int32 rank = 4; // Rank of the module resource tag
+  google.protobuf.Timestamp created_on = 5; // Creation timestamp
+  optional int64 created_by = 6; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 7; // Last modification timestamp
+  optional int64 modified_by = 8; // User who last modified the entry
+  optional google.protobuf.Timestamp deleted_at = 9;
+
+}
+
+message VideoResolutionConversion {
+  optional int32 id = 1; // Primary key for learning outcome
+  optional int32 video_resoultion_id = 2; // Referencing key for learning outcome
+  string raw_file_name = 3; // Name of the learning outcome
+  string raw_file_path = 4; // Short description of the learning outcome
+  optional string processed_file_path = 5; // Long description of the learning outcome
+  optional string resolution = 6; // Long description of the learning outcome
+  optional string status = 7;
+  optional int32 number_of_run = 8;
+  google.protobuf.Timestamp created_on = 9; // Creation timestamp
+  optional int64 created_by = 10; // User who created the entry
+  optional google.protobuf.Timestamp modified_on = 11; // Last modification timestamp
+  optional int64 modified_by = 12; // User who last modified the entry
+}
